@@ -1,0 +1,230 @@
+package com.example.medicinereminder;
+
+
+import android.os.Bundle;
+import android.widget.CalendarView;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.example.medicinereminder.adapters.CalendarAdapter;
+import com.example.medicinereminder.models.DoseHistory;
+import com.example.medicinereminder.models.Medication;
+import com.example.medicinereminder.utils.DatabaseHelper;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+
+public class CalendarActivity extends AppCompatActivity {
+    private DatabaseHelper dbHelper;
+    private CalendarAdapter calendarAdapter;
+
+    private CalendarView calendarView;
+    private RecyclerView medicationsRecycler;
+    private TextView selectedDateText;
+    private TextView noMedicationsText;
+
+    private Date selectedDate;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.getDefault());
+    private SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_calendar);
+
+        dbHelper = new DatabaseHelper(this);
+        selectedDate = new Date(); // Default to today
+
+        initViews();
+        setupCalendar();
+        loadMedicationsForDate(selectedDate);
+    }
+
+    private void initViews() {
+        calendarView = findViewById(R.id.calendarView);
+        medicationsRecycler = findViewById(R.id.medicationsRecycler);
+        selectedDateText = findViewById(R.id.selectedDateText);
+        noMedicationsText = findViewById(R.id.noMedicationsText);
+
+        findViewById(R.id.backButton).setOnClickListener(v -> finish());
+
+        // Setup RecyclerView
+        medicationsRecycler.setLayoutManager(new LinearLayoutManager(this));
+        calendarAdapter = new CalendarAdapter(new ArrayList<>(), this::onMedicationAction);
+        medicationsRecycler.setAdapter(calendarAdapter);
+    }
+
+    private void setupCalendar() {
+        calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, dayOfMonth);
+            selectedDate = calendar.getTime();
+            loadMedicationsForDate(selectedDate);
+        });
+    }
+
+    private void loadMedicationsForDate(Date date) {
+        selectedDateText.setText(dateFormat.format(date));
+
+        List<Medication> allMedications = dbHelper.getAllMedications();
+        List<CalendarMedicationItem> medicationsForDate = new ArrayList<>();
+
+        for (Medication medication : allMedications) {
+            if (isMedicationValidForDate(medication, date)) {
+                // Get dose history for this medication on this date
+                List<DoseHistory> dayHistory = getDoseHistoryForDate(medication.getId(), date);
+
+                int dailyDoses = medication.getDailyDoseCount();
+                if (dailyDoses > 0) {
+                    for (int i = 0; i < dailyDoses; i++) {
+                        CalendarMedicationItem item = new CalendarMedicationItem();
+                        item.medication = medication;
+                        item.doseNumber = i + 1;
+                        item.scheduledTime = getScheduledTimeForDose(medication, i);
+
+                        // Check if this dose was taken
+                        item.doseHistory = findDoseHistoryForTime(dayHistory, item.scheduledTime);
+
+                        medicationsForDate.add(item);
+                    }
+                } else {
+                    // As needed medication
+                    CalendarMedicationItem item = new CalendarMedicationItem();
+                    item.medication = medication;
+                    item.doseNumber = 0;
+                    item.scheduledTime = "As needed";
+                    item.doseHistory = dayHistory.isEmpty() ? null : dayHistory.get(0);
+                    medicationsForDate.add(item);
+                }
+            }
+        }
+
+        if (medicationsForDate.isEmpty()) {
+            medicationsRecycler.setVisibility(android.view.View.GONE);
+            noMedicationsText.setVisibility(android.view.View.VISIBLE);
+        } else {
+            medicationsRecycler.setVisibility(android.view.View.VISIBLE);
+            noMedicationsText.setVisibility(android.view.View.GONE);
+            calendarAdapter.updateItems(medicationsForDate);
+        }
+    }
+
+    private boolean isMedicationValidForDate(Medication medication, Date date) {
+        if (!medication.isActive()) return false;
+
+        Date startDate = medication.getStartDate();
+        Date endDate = medication.getEndDate();
+
+        if (startDate != null && date.before(startDate)) return false;
+        if (endDate != null && date.after(endDate)) return false;
+
+        return true;
+    }
+
+    private List<DoseHistory> getDoseHistoryForDate(int medicationId, Date date) {
+        List<DoseHistory> allHistory = dbHelper.getAllDoseHistory();
+        List<DoseHistory> dateHistory = new ArrayList<>();
+
+        String dateString = dayFormat.format(date);
+
+        for (DoseHistory history : allHistory) {
+            if (history.getMedicationId() == medicationId) {
+                String historyDateString = dayFormat.format(history.getScheduledTime());
+                if (dateString.equals(historyDateString)) {
+                    dateHistory.add(history);
+                }
+            }
+        }
+
+        return dateHistory;
+    }
+
+    private String getScheduledTimeForDose(Medication medication, int doseIndex) {
+        List<String> reminderTimes = medication.getReminderTimes();
+        if (reminderTimes != null && doseIndex < reminderTimes.size()) {
+            return reminderTimes.get(doseIndex);
+        }
+
+        // Default times if no reminder times set
+        switch (doseIndex) {
+            case 0: return "08:00";
+            case 1: return "14:00";
+            case 2: return "20:00";
+            case 3: return "22:00";
+            default: return "08:00";
+        }
+    }
+
+    private DoseHistory findDoseHistoryForTime(List<DoseHistory> history, String scheduledTime) {
+        for (DoseHistory dose : history) {
+            // Simple matching - in a real app you'd want more sophisticated time matching
+            if (dose.getScheduledTime() != null) {
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                String doseTime = timeFormat.format(dose.getScheduledTime());
+                if (scheduledTime.equals(doseTime)) {
+                    return dose;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void onMedicationAction(CalendarMedicationItem item, String action) {
+        if (item.medication == null) return;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(selectedDate);
+
+        // Set time based on scheduled time
+        if (!"As needed".equals(item.scheduledTime)) {
+            String[] timeParts = item.scheduledTime.split(":");
+            if (timeParts.length == 2) {
+                calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeParts[0]));
+                calendar.set(Calendar.MINUTE, Integer.parseInt(timeParts[1]));
+            }
+        }
+
+        Date scheduledDateTime = calendar.getTime();
+
+        if (item.doseHistory == null) {
+            // Create new dose history
+            DoseHistory newHistory = new DoseHistory(
+                    item.medication.getId(),
+                    item.medication.getName(),
+                    item.medication.getDosage(),
+                    scheduledDateTime,
+                    action
+            );
+
+            dbHelper.addDoseHistory(newHistory);
+        } else {
+            // Update existing dose history
+            item.doseHistory.setStatus(action);
+            if ("taken".equals(action)) {
+                item.doseHistory.setTakenTime(new Date());
+            }
+            // Note: You'd need to add updateDoseHistory method to DatabaseHelper
+        }
+
+        // Update medication supply if needed
+        if ("taken".equals(action) && item.medication.isRefillTrackingEnabled()) {
+            item.medication.setCurrentSupply(item.medication.getCurrentSupply() - 1);
+            dbHelper.updateMedication(item.medication);
+        }
+
+        // Refresh the view
+        loadMedicationsForDate(selectedDate);
+    }
+
+    public static class CalendarMedicationItem {
+        public Medication medication;
+        public int doseNumber;
+        public String scheduledTime;
+        public DoseHistory doseHistory;
+    }
+}
