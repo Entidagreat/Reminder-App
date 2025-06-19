@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="reminder_types">
+        <item>Study Session</item>
+        <item>Assignment</item>
+        <item>Exam</item>
+        <item>Language Practice</item>
+        <item>Other</item>
+    </string-array>
+</resources>

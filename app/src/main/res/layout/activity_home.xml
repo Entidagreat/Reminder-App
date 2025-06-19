@@ -209,10 +209,7 @@
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_weight="1"
-                android:layout_margin="4dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
+                android:layout_marginStart="8dp"
                 style="@style/CardStyle">
 
                 <LinearLayout
@@ -220,22 +217,22 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="8dp">
+                    android:padding="12dp">
 
                     <ImageView
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:src="@drawable/ic_refill"
-                        android:layout_marginBottom="8dp"
-                        android:contentDescription="Refill" />
+                        android:contentDescription="@string/refill_alerts" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/refill_tracker"
-                        android:textSize="12sp"
+                        android:text="@string/refill_alerts"
+                        android:textSize="14sp"
+                        android:layout_marginTop="8dp"
                         android:textColor="@color/text_primary"
-                        android:gravity="center" />
+                        android:textAlignment="center" />
 
                 </LinearLayout>
 
@@ -289,6 +286,54 @@
             android:gravity="center"
             android:padding="32dp"
             android:visibility="gone" />
+
+        <!-- Educational Reminders Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/educationalReminderCard"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="16dp"
+            style="@style/CardStyle">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/educational_reminders"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Study sessions, assignments, exams, and more"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_education"
+                    android:contentDescription="@string/educational_reminders" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 

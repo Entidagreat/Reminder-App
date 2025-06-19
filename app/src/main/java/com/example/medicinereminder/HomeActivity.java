@@ -33,6 +33,7 @@ public class HomeActivity extends AppCompatActivity {
     private CardView calendarCard;
     private CardView historyCard;
     private CardView refillCard;
+    private CardView educationalReminderCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,7 @@ public class HomeActivity extends AppCompatActivity {
         calendarCard = findViewById(R.id.calendarCard);
         historyCard = findViewById(R.id.historyCard);
         refillCard = findViewById(R.id.refillCard);
+        educationalReminderCard = findViewById(R.id.educationalReminderCard);
 
         // Setup RecyclerView
         todaysScheduleRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -86,6 +88,11 @@ public class HomeActivity extends AppCompatActivity {
 
         refillCard.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, RefillActivity.class);
+            startActivity(intent);
+        });
+
+        educationalReminderCard.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, EducationalReminderActivity.class);
             startActivity(intent);
         });
 

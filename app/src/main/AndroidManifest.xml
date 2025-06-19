@@ -57,6 +57,16 @@
             android:name=".RefillActivity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
+            
+        <activity
+            android:name=".EducationalReminderActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+            
+        <!-- BroadcastReceiver for Educational Reminders -->
+        <receiver
+            android:name=".receivers.EducationalReminderReceiver"
+            android:exported="false" />
 
     </application>
 

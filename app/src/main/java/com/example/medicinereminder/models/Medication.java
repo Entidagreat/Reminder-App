@@ -39,7 +39,7 @@ public class Medication {
         calculateEndDate();
     }
 
-    private void calculateEndDate() {
+    public void calculateEndDate() {
         if (startDate != null && duration > 0) {
             long endTime = startDate.getTime() + (duration * 24L * 60L * 60L * 1000L);
             this.endDate = new Date(endTime);
