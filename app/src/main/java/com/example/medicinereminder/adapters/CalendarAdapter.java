@@ -1,6 +1,5 @@
 package com.example.medicinereminder.adapters;
 
-
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +14,14 @@ import com.example.medicinereminder.R;
 import java.util.List;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder> {
-    private List<CalendarActivity.CalendarMedicationItem> items;
-    private OnMedicationActionListener actionListener;
+    private List<CalendarActivity.CalendarItem> items;
+    private OnCalendarItemActionListener actionListener;
 
-    public interface OnMedicationActionListener {
-        void onMedicationAction(CalendarActivity.CalendarMedicationItem item, String action);
+    public interface OnCalendarItemActionListener {
+        void onCalendarItemAction(CalendarActivity.CalendarItem item, String action);
     }
 
-    public CalendarAdapter(List<CalendarActivity.CalendarMedicationItem> items, OnMedicationActionListener actionListener) {
+    public CalendarAdapter(List<CalendarActivity.CalendarItem> items, OnCalendarItemActionListener actionListener) {
         this.items = items;
         this.actionListener = actionListener;
     }
@@ -36,8 +35,91 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
 
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
-        CalendarActivity.CalendarMedicationItem item = items.get(position);
-        holder.bind(item);
+        CalendarActivity.CalendarItem item = items.get(position);
+
+        if ("medication".equals(item.type)) {
+            // Handle medication item
+            holder.medicationName.setText(item.medication.getName());
+            holder.dosageText.setText(item.medication.getDosage());
+            holder.timeText.setText(item.scheduledTime);
+
+            // Set up status UI based on doseHistory
+            if (item.doseHistory != null) {
+                // Dose has been recorded
+                holder.statusText.setText(item.doseHistory.getDisplayStatus());
+                holder.statusText.setVisibility(View.VISIBLE);
+
+                int statusColor = Color.parseColor(item.doseHistory.getStatusColor());
+                holder.statusIndicator.setBackgroundColor(statusColor);
+                holder.statusText.setTextColor(statusColor);
+
+                // Hide action buttons if already taken
+                if (item.doseHistory.isTaken()) {
+                    holder.takeButton.setVisibility(View.GONE);
+                    holder.missButton.setVisibility(View.GONE);
+                } else {
+                    holder.takeButton.setVisibility(View.VISIBLE);
+                    holder.missButton.setVisibility(View.VISIBLE);
+                }
+            } else {
+                // Dose not recorded yet
+                holder.statusText.setVisibility(View.GONE);
+                holder.statusIndicator.setBackgroundColor(Color.GRAY);
+                holder.takeButton.setVisibility(View.VISIBLE);
+                holder.missButton.setVisibility(View.VISIBLE);
+            }
+
+            holder.takeButton.setText(R.string.take);
+            holder.missButton.setText(R.string.miss);
+
+            holder.takeButton.setOnClickListener(v -> {
+                if (actionListener != null) {
+                    actionListener.onCalendarItemAction(item, "taken");
+                }
+            });
+
+            holder.missButton.setOnClickListener(v -> {
+                if (actionListener != null) {
+                    actionListener.onCalendarItemAction(item, "missed");
+                }
+            });
+        } else if ("educational".equals(item.type)) {
+            // Handle educational reminder
+            holder.medicationName.setText(item.educationalReminder.getTitle());
+            holder.dosageText.setText(item.educationalReminder.getTypeLabel());
+            holder.timeText.setText(item.educationalReminder.getReminderTime());
+
+            // Set up status UI based on completion status
+            if (item.educationalReminder.isCompleted()) {
+                holder.statusText.setText(R.string.completed);
+                holder.statusText.setVisibility(View.VISIBLE);
+                holder.statusText.setTextColor(Color.parseColor("#4CAF50")); // green
+                holder.statusIndicator.setBackgroundColor(Color.parseColor("#4CAF50"));
+                
+                holder.takeButton.setVisibility(View.GONE);
+                holder.missButton.setVisibility(View.GONE);
+            } else {
+                holder.statusText.setText(R.string.pending);
+                holder.statusText.setVisibility(View.VISIBLE);
+                holder.statusText.setTextColor(Color.parseColor("#FF9800")); // orange
+                holder.statusIndicator.setBackgroundColor(Color.parseColor("#FF9800"));
+                
+                holder.takeButton.setVisibility(View.VISIBLE);
+                holder.missButton.setVisibility(View.VISIBLE);
+            }
+
+            holder.takeButton.setText(R.string.complete);
+            holder.missButton.setText(R.string.dismiss);
+
+            // Set up click listeners
+            holder.takeButton.setOnClickListener(v -> {
+                actionListener.onCalendarItemAction(item, "completed");
+            });
+
+            holder.missButton.setOnClickListener(v -> {
+                actionListener.onCalendarItemAction(item, "dismissed");
+            });
+        }
     }
 
     @Override
@@ -45,7 +127,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
         return items.size();
     }
 
-    public void updateItems(List<CalendarActivity.CalendarMedicationItem> newItems) {
+    public void updateItems(List<CalendarActivity.CalendarItem> newItems) {
         this.items = newItems;
         notifyDataSetChanged();
     }
@@ -70,49 +152,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
             takeButton = itemView.findViewById(R.id.takeButton);
             missButton = itemView.findViewById(R.id.missButton);
             statusIndicator = itemView.findViewById(R.id.statusIndicator);
-        }
-
-        public void bind(CalendarActivity.CalendarMedicationItem item) {
-            medicationName.setText(item.medication.getName());
-            dosageText.setText(item.medication.getDosage());
-            timeText.setText(item.scheduledTime);
-
-            if (item.doseHistory != null) {
-                // Dose has been recorded
-                statusText.setText(item.doseHistory.getDisplayStatus());
-                statusText.setVisibility(View.VISIBLE);
-
-                int statusColor = Color.parseColor(item.doseHistory.getStatusColor());
-                statusIndicator.setBackgroundColor(statusColor);
-                statusText.setTextColor(statusColor);
-
-                // Hide action buttons if already taken
-                if (item.doseHistory.isTaken()) {
-                    takeButton.setVisibility(View.GONE);
-                    missButton.setVisibility(View.GONE);
-                } else {
-                    takeButton.setVisibility(View.VISIBLE);
-                    missButton.setVisibility(View.VISIBLE);
-                }
-            } else {
-                // Dose not recorded yet
-                statusText.setVisibility(View.GONE);
-                statusIndicator.setBackgroundColor(Color.GRAY);
-                takeButton.setVisibility(View.VISIBLE);
-                missButton.setVisibility(View.VISIBLE);
-            }
-
-            takeButton.setOnClickListener(v -> {
-                if (actionListener != null) {
-                    actionListener.onMedicationAction(item, "taken");
-                }
-            });
-
-            missButton.setOnClickListener(v -> {
-                if (actionListener != null) {
-                    actionListener.onMedicationAction(item, "missed");
-                }
-            });
         }
     }
 }

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.medicinereminder.adapters.CalendarAdapter;
 import com.example.medicinereminder.models.DoseHistory;
+import com.example.medicinereminder.models.EducationalReminder;
 import com.example.medicinereminder.models.Medication;
 import com.example.medicinereminder.utils.DatabaseHelper;
 import java.text.SimpleDateFormat;
@@ -55,7 +56,7 @@ public class CalendarActivity extends AppCompatActivity {
 
         // Setup RecyclerView
         medicationsRecycler.setLayoutManager(new LinearLayoutManager(this));
-        calendarAdapter = new CalendarAdapter(new ArrayList<>(), this::onMedicationAction);
+        calendarAdapter = new CalendarAdapter(new ArrayList<>(), this::onCalendarItemAction);
         medicationsRecycler.setAdapter(calendarAdapter);
     }
 
@@ -71,9 +72,11 @@ public class CalendarActivity extends AppCompatActivity {
     private void loadMedicationsForDate(Date date) {
         selectedDateText.setText(dateFormat.format(date));
 
+        // Get medications
         List<Medication> allMedications = dbHelper.getAllMedications();
-        List<CalendarMedicationItem> medicationsForDate = new ArrayList<>();
+        List<CalendarItem> itemsForDate = new ArrayList<>();
 
+        // Process medications
         for (Medication medication : allMedications) {
             if (isMedicationValidForDate(medication, date)) {
                 // Get dose history for this medication on this date
@@ -82,7 +85,8 @@ public class CalendarActivity extends AppCompatActivity {
                 int dailyDoses = medication.getDailyDoseCount();
                 if (dailyDoses > 0) {
                     for (int i = 0; i < dailyDoses; i++) {
-                        CalendarMedicationItem item = new CalendarMedicationItem();
+                        CalendarItem item = new CalendarItem();
+                        item.type = "medication";
                         item.medication = medication;
                         item.doseNumber = i + 1;
                         item.scheduledTime = getScheduledTimeForDose(medication, i);
@@ -90,27 +94,39 @@ public class CalendarActivity extends AppCompatActivity {
                         // Check if this dose was taken
                         item.doseHistory = findDoseHistoryForTime(dayHistory, item.scheduledTime);
 
-                        medicationsForDate.add(item);
+                        itemsForDate.add(item);
                     }
                 } else {
                     // As needed medication
-                    CalendarMedicationItem item = new CalendarMedicationItem();
+                    CalendarItem item = new CalendarItem();
+                    item.type = "medication";
                     item.medication = medication;
                     item.doseNumber = 0;
                     item.scheduledTime = "As needed";
                     item.doseHistory = dayHistory.isEmpty() ? null : dayHistory.get(0);
-                    medicationsForDate.add(item);
+                    itemsForDate.add(item);
                 }
             }
         }
 
-        if (medicationsForDate.isEmpty()) {
+        // Get educational reminders for the selected date
+        List<EducationalReminder> educationalReminders = dbHelper.getEducationalRemindersForDate(date);
+
+        // Add educational reminders to the list
+        for (EducationalReminder reminder : educationalReminders) {
+            CalendarItem item = new CalendarItem();
+            item.type = "educational";
+            item.educationalReminder = reminder;
+            itemsForDate.add(item);
+        }
+
+        if (itemsForDate.isEmpty()) {
             medicationsRecycler.setVisibility(android.view.View.GONE);
             noMedicationsText.setVisibility(android.view.View.VISIBLE);
         } else {
             medicationsRecycler.setVisibility(android.view.View.VISIBLE);
             noMedicationsText.setVisibility(android.view.View.GONE);
-            calendarAdapter.updateItems(medicationsForDate);
+            calendarAdapter.updateItems(itemsForDate);
         }
     }
 
@@ -174,7 +190,18 @@ public class CalendarActivity extends AppCompatActivity {
         return null;
     }
 
-    private void onMedicationAction(CalendarMedicationItem item, String action) {
+    private void onCalendarItemAction(CalendarItem item, String action) {
+        if ("medication".equals(item.type)) {
+            handleMedicationAction(item, action);
+        } else if ("educational".equals(item.type)) {
+            handleEducationalAction(item, action);
+        }
+
+        // Refresh the view
+        loadMedicationsForDate(selectedDate);
+    }
+
+    private void handleMedicationAction(CalendarItem item, String action) {
         if (item.medication == null) return;
 
         Calendar calendar = Calendar.getInstance();
@@ -201,6 +228,10 @@ public class CalendarActivity extends AppCompatActivity {
                     action
             );
 
+            if ("taken".equals(action)) {
+                newHistory.setTakenTime(new Date());
+            }
+
             dbHelper.addDoseHistory(newHistory);
         } else {
             // Update existing dose history
@@ -208,7 +239,7 @@ public class CalendarActivity extends AppCompatActivity {
             if ("taken".equals(action)) {
                 item.doseHistory.setTakenTime(new Date());
             }
-            // Note: You'd need to add updateDoseHistory method to DatabaseHelper
+            dbHelper.updateDoseHistory(item.doseHistory);
         }
 
         // Update medication supply if needed
@@ -216,9 +247,16 @@ public class CalendarActivity extends AppCompatActivity {
             item.medication.setCurrentSupply(item.medication.getCurrentSupply() - 1);
             dbHelper.updateMedication(item.medication);
         }
+    }
 
-        // Refresh the view
-        loadMedicationsForDate(selectedDate);
+    private void handleEducationalAction(CalendarItem item, String action) {
+        if (item.educationalReminder == null) return;
+        
+        // Update the reminder's completion status
+        item.educationalReminder.setCompleted("completed".equals(action));
+        
+        // Update in database
+        dbHelper.updateEducationalReminder(item.educationalReminder);
     }
 
     public static class CalendarMedicationItem {
@@ -226,5 +264,15 @@ public class CalendarActivity extends AppCompatActivity {
         public int doseNumber;
         public String scheduledTime;
         public DoseHistory doseHistory;
+    }
+
+    // Create a new CalendarItem class that can represent any type of reminder
+    public static class CalendarItem {
+        public String type; // "medication" or "educational"
+        public Medication medication;
+        public int doseNumber;
+        public String scheduledTime;
+        public DoseHistory doseHistory;
+        public EducationalReminder educationalReminder;
     }
 }

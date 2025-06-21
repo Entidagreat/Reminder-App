@@ -1,6 +1,5 @@
 package com.example.medicinereminder;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,8 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.medicinereminder.adapters.CombinedReminderAdapter;
 import com.example.medicinereminder.adapters.MedicationAdapter;
 import com.example.medicinereminder.models.DoseHistory;
+import com.example.medicinereminder.models.EducationalReminder;
 import com.example.medicinereminder.models.Medication;
 import com.example.medicinereminder.utils.DatabaseHelper;
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         addMedicationCard.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, AddMedicationActivity.class);
+            Intent intent = new Intent(HomeActivity.this, AddReminderSelectionActivity.class);
             startActivity(intent);
         });
 
@@ -103,17 +104,25 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void loadData() {
+        // Get today's medications
         List<Medication> todaysMedications = dbHelper.getTodaysMedications();
 
-        if (todaysMedications.isEmpty()) {
-            showNoMedications();
+        // Get today's educational reminders
+        List<EducationalReminder> todaysEducationalReminders = dbHelper.getTodaysEducationalReminders();
+
+        // For future: Add other types of reminders here
+
+        // Show appropriate UI if there are no reminders
+        if (todaysMedications.isEmpty() && todaysEducationalReminders.isEmpty()) {
+            showNoReminders();
         } else {
-            showMedications(todaysMedications);
+            // Show medications and reminders
+            showScheduledItems(todaysMedications, todaysEducationalReminders);
             updateDailyProgress(todaysMedications);
         }
     }
 
-    private void showNoMedications() {
+    private void showNoReminders() {
         todaysScheduleRecycler.setVisibility(View.GONE);
         noMedicationsText.setVisibility(View.VISIBLE);
         seeAllButton.setVisibility(View.GONE);
@@ -121,12 +130,20 @@ public class HomeActivity extends AppCompatActivity {
         dailyProgressBar.setProgress(0);
     }
 
-    private void showMedications(List<Medication> medications) {
+    private void showScheduledItems(List<Medication> medications, List<EducationalReminder> educationalReminders) {
         todaysScheduleRecycler.setVisibility(View.VISIBLE);
         noMedicationsText.setVisibility(View.GONE);
         seeAllButton.setVisibility(View.VISIBLE);
 
-        medicationAdapter.updateMedications(medications);
+        // Create a combined adapter that handles both medication and educational reminders
+        CombinedReminderAdapter adapter = new CombinedReminderAdapter(
+                medications,
+                educationalReminders,
+                this::onMedicationClick,
+                this::onEducationalReminderClick
+        );
+
+        todaysScheduleRecycler.setAdapter(adapter);
     }
 
     private void updateDailyProgress(List<Medication> medications) {
@@ -186,6 +203,13 @@ public class HomeActivity extends AppCompatActivity {
 
         // Refresh the display
         loadData();
+    }
+
+    // Add method to handle educational reminder click
+    private void onEducationalReminderClick(EducationalReminder reminder) {
+        Intent intent = new Intent(HomeActivity.this, EducationalReminderActivity.class);
+        intent.putExtra("reminder_id", reminder.getId());
+        startActivity(intent);
     }
 
     private String getGreeting() {

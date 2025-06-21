@@ -459,15 +459,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_NOTES, reminder.getNotes());
         values.put(KEY_NOTIFICATION_ENABLED, reminder.isNotificationEnabled() ? 1 : 0);
         
-        int rowsAffected = db.update(
-                TABLE_EDUCATIONAL_REMINDERS,
-                values,
-                KEY_ID + " = ?",
-                new String[]{String.valueOf(reminder.getId())}
-        );
+        // Update the reminder where id = ?
+        int result = db.update(TABLE_EDUCATIONAL_REMINDERS, values, KEY_ID + " = ?", 
+            new String[] { String.valueOf(reminder.getId()) });
         
         db.close();
-        return rowsAffected;
+        return result;
     }
     
     // Mark an educational reminder as completed
@@ -635,5 +632,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return doseHistory;
+    }
+
+    public int updateDoseHistory(DoseHistory doseHistory) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        
+        values.put(KEY_STATUS, doseHistory.getStatus());
+        
+        if (doseHistory.getTakenTime() != null) {
+            values.put(KEY_TAKEN_TIME, dateFormat.format(doseHistory.getTakenTime()));
+        }
+        
+        // Update the dose history where id = ?
+        int result = db.update(TABLE_DOSE_HISTORY, values, KEY_ID + " = ?", 
+            new String[] { String.valueOf(doseHistory.getId()) });
+            
+        db.close();
+        return result;
+    }
+
+    // Add this method to the DatabaseHelper class
+    public List<EducationalReminder> getEducationalRemindersForDate(Date date) {
+        // Ensure table exists
+        ensureEducationalRemindersTableExists();
+        
+        List<EducationalReminder> allReminders = getAllEducationalReminders();
+        List<EducationalReminder> remindersForDate = new ArrayList<>();
+        
+        // Format date for comparison
+        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String dateString = dayFormat.format(date);
+        
+        for (EducationalReminder reminder : allReminders) {
+            if (reminder.getReminderDate() != null) {
+                String reminderDateString = dayFormat.format(reminder.getReminderDate());
+                if (dateString.equals(reminderDateString)) {
+                    remindersForDate.add(reminder);
+                }
+            }
+        }
+        
+        return remindersForDate;
     }
 }

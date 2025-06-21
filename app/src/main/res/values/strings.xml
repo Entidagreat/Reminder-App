@@ -50,9 +50,11 @@
     <!-- Medication Actions -->
     <string name="take">Take</string>
     <string name="skip">Skip</string>
-    <string name="taken">Taken</string>
-    <string name="missed">Missed</string>
-    <string name="skipped">Skipped</string>
+    <string name="miss">Skip</string>
+    <string name="complete">Complete</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="completed">Completed</string>
+    <string name="pending">Pending</string>
 
     <!-- Calendar -->
     <string name="calendar">Calendar</string>
@@ -172,4 +174,10 @@
     <string name="educational_reminder_notification">Educational Reminder</string>
     <string name="reminder_details">Reminder Details</string>
     <string name="scheduling">Scheduling</string>
+
+    <!-- Reminder Categories -->
+    <string name="medicine_reminders">Medicine Reminders</string>
+    <string name="social_reminders">Social Reminders</string>
+    <string name="health_reminders">Health Reminders</string>
+    <string name="sleep_reminders">Sleep Reminders</string>
 </resources>
