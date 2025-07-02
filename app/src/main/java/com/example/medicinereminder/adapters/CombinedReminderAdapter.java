@@ -18,8 +18,12 @@ import com.example.medicinereminder.models.Medication;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+
+
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+
 
 public class CombinedReminderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     // Helper: lưu trạng thái đã uống cho từng liều theo ngày, thuốc, giờ
@@ -46,15 +50,18 @@ public class CombinedReminderAdapter extends RecyclerView.Adapter<RecyclerView.V
     
     private List<Object> items = new ArrayList<>();
     private Consumer<Medication> medicationClickListener;
+    private OnDoseTakenListener onDoseTakenListener;
     private Consumer<EducationalReminder> educationalClickListener;
     
     public CombinedReminderAdapter(
             List<Medication> medications, 
             List<EducationalReminder> educationalReminders,
             Consumer<Medication> medicationClickListener,
+            OnDoseTakenListener onDoseTakenListener,
             Consumer<EducationalReminder> educationalClickListener) {
         
         this.medicationClickListener = medicationClickListener;
+        this.onDoseTakenListener = onDoseTakenListener;
         this.educationalClickListener = educationalClickListener;
         
         // Add all items to combined list
@@ -137,6 +144,52 @@ public class CombinedReminderAdapter extends RecyclerView.Adapter<RecyclerView.V
                         String time = reminderTimes.get(i);
                         if (!isDoseTaken(dosesRowLayout, medication.getId(), time) && shouldShowTakeButton(time, reminderTimes, i)) {
                             setDoseTaken(dosesRowLayout, medication.getId(), time);
+
+                            // --- Đồng bộ trạng thái vào database (DoseHistory), kiểm tra trùng trước khi thêm ---
+                            try {
+                                android.content.Context context = dosesRowLayout.getContext();
+                                com.example.medicinereminder.utils.DatabaseHelper dbHelper = new com.example.medicinereminder.utils.DatabaseHelper(context);
+                                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault());
+                                java.util.Date today = new java.util.Date();
+                                String todayStr = sdf.format(today);
+                                java.text.SimpleDateFormat fullFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault());
+                                java.util.Date scheduledDateTime = fullFormat.parse(todayStr + " " + time);
+
+                                // Kiểm tra đã có DoseHistory cho thuốc + ngày + giờ này chưa
+                                java.util.List<com.example.medicinereminder.models.DoseHistory> allToday = dbHelper.getTodaysDoseHistory();
+                                com.example.medicinereminder.models.DoseHistory found = null;
+                                for (com.example.medicinereminder.models.DoseHistory dh : allToday) {
+                                    if (dh.getMedicationId() == medication.getId() && dh.getScheduledTime() != null) {
+                                        java.text.SimpleDateFormat cmpFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault());
+                                        String cmp1 = cmpFormat.format(dh.getScheduledTime());
+                                        String cmp2 = cmpFormat.format(scheduledDateTime);
+                                        if (cmp1.equals(cmp2)) {
+                                            found = dh;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (found != null) {
+                                    // Đã có, chỉ update trạng thái
+                                    found.setStatus("taken");
+                                    found.setTakenTime(new java.util.Date());
+                                    dbHelper.updateDoseHistory(found);
+                                } else {
+                                    // Chưa có, thêm mới
+                                    com.example.medicinereminder.models.DoseHistory newHistory = new com.example.medicinereminder.models.DoseHistory(
+                                        medication.getId(),
+                                        medication.getName(),
+                                        medication.getDosage(),
+                                        scheduledDateTime,
+                                        "taken"
+                                    );
+                                    newHistory.setTakenTime(new java.util.Date());
+                                    dbHelper.addDoseHistory(newHistory);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            // --- END đồng bộ ---
                             break;
                         }
                     }
@@ -144,6 +197,10 @@ public class CombinedReminderAdapter extends RecyclerView.Adapter<RecyclerView.V
                     notifyItemChanged(position);
                     if (medicationClickListener != null) {
                         medicationClickListener.accept(medication);
+                    }
+                    // Gọi callback cập nhật tiến độ ngay
+                    if (onDoseTakenListener != null) {
+                        onDoseTakenListener.onDoseTaken();
                     }
                 });
             } else if (allTaken) {

@@ -129,9 +129,7 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
                     }
                     // Refresh lại giao diện
                     bind(medication);
-                    if (clickListener != null) {
-                        clickListener.onMedicationClick(medication);
-                    }
+                    // Đã loại bỏ gọi clickListener.onMedicationClick để tránh double ghi nhận lịch sử
                 });
             } else if (allTaken) {
                 takeDoseButton.setEnabled(false);

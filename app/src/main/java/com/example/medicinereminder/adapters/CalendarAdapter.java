@@ -52,37 +52,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
                 int statusColor = Color.parseColor(item.doseHistory.getStatusColor());
                 holder.statusIndicator.setBackgroundColor(statusColor);
                 holder.statusText.setTextColor(statusColor);
-
-                // Hide action buttons if already taken
-                if (item.doseHistory.isTaken()) {
-                    holder.takeButton.setVisibility(View.GONE);
-                    holder.missButton.setVisibility(View.GONE);
-                } else {
-                    holder.takeButton.setVisibility(View.VISIBLE);
-                    holder.missButton.setVisibility(View.VISIBLE);
-                }
             } else {
                 // Dose not recorded yet
                 holder.statusText.setVisibility(View.GONE);
                 holder.statusIndicator.setBackgroundColor(Color.GRAY);
-                holder.takeButton.setVisibility(View.VISIBLE);
-                holder.missButton.setVisibility(View.VISIBLE);
             }
-
-            holder.takeButton.setText(R.string.take);
-            holder.missButton.setText(R.string.miss);
-
-            holder.takeButton.setOnClickListener(v -> {
-                if (actionListener != null) {
-                    actionListener.onCalendarItemAction(item, "taken");
-                }
-            });
-
-            holder.missButton.setOnClickListener(v -> {
-                if (actionListener != null) {
-                    actionListener.onCalendarItemAction(item, "missed");
-                }
-            });
+            // Đã loại bỏ nút hành động, không còn thao tác với takeButton/missButton
         } else if ("educational".equals(item.type)) {
             // Handle educational reminder
             holder.medicationName.setText(item.educationalReminder.getTitle());
@@ -95,30 +70,13 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
                 holder.statusText.setVisibility(View.VISIBLE);
                 holder.statusText.setTextColor(Color.parseColor("#4CAF50")); // green
                 holder.statusIndicator.setBackgroundColor(Color.parseColor("#4CAF50"));
-                
-                holder.takeButton.setVisibility(View.GONE);
-                holder.missButton.setVisibility(View.GONE);
             } else {
                 holder.statusText.setText(R.string.pending);
                 holder.statusText.setVisibility(View.VISIBLE);
                 holder.statusText.setTextColor(Color.parseColor("#FF9800")); // orange
                 holder.statusIndicator.setBackgroundColor(Color.parseColor("#FF9800"));
-                
-                holder.takeButton.setVisibility(View.VISIBLE);
-                holder.missButton.setVisibility(View.VISIBLE);
             }
-
-            holder.takeButton.setText(R.string.complete);
-            holder.missButton.setText(R.string.dismiss);
-
-            // Set up click listeners
-            holder.takeButton.setOnClickListener(v -> {
-                actionListener.onCalendarItemAction(item, "completed");
-            });
-
-            holder.missButton.setOnClickListener(v -> {
-                actionListener.onCalendarItemAction(item, "dismissed");
-            });
+            // Đã loại bỏ nút hành động, không còn thao tác với takeButton/missButton
         }
     }
 
@@ -138,8 +96,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
         private TextView dosageText;
         private TextView timeText;
         private TextView statusText;
-        private Button takeButton;
-        private Button missButton;
         private View statusIndicator;
 
         public CalendarViewHolder(@NonNull View itemView) {
@@ -149,8 +105,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
             dosageText = itemView.findViewById(R.id.dosageText);
             timeText = itemView.findViewById(R.id.timeText);
             statusText = itemView.findViewById(R.id.statusText);
-            takeButton = itemView.findViewById(R.id.takeButton);
-            missButton = itemView.findViewById(R.id.missButton);
             statusIndicator = itemView.findViewById(R.id.statusIndicator);
         }
     }

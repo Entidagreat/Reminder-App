@@ -65,34 +65,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_vertical">
-
-            <Button
-                android:id="@+id/takeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:text="Take"
-                android:textSize="10sp"
-                android:textColor="@color/white"
-                android:background="@drawable/button_primary_small"
-                android:paddingHorizontal="12dp"
-                android:layout_marginEnd="8dp" />
-
-            <Button
-                android:id="@+id/missButton"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:text="Miss"
-                android:textSize="10sp"
-                android:textColor="@color/status_missed"
-                android:background="@drawable/button_outline_red"
-                android:paddingHorizontal="12dp" />
-
-        </LinearLayout>
+        <!-- ĐÃ LOẠI BỎ NÚT UỐNG VÀ BỎ LỠ, CHỈ HIỂN THỊ TRẠNG THÁI -->
 
     </LinearLayout>
 

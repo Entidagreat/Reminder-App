@@ -136,11 +136,13 @@ public class HomeActivity extends AppCompatActivity {
         seeAllButton.setVisibility(View.VISIBLE);
 
         // Create a combined adapter that handles both medication and educational reminders
+        // Truyền callback rỗng để tránh double ghi nhận lịch sử khi bấm "Uống"
         CombinedReminderAdapter adapter = new CombinedReminderAdapter(
                 medications,
                 educationalReminders,
-                this::onMedicationClick,
-                this::onEducationalReminderClick
+                m -> {}, // callback rỗng, không làm gì
+                () -> updateDailyProgress(medications), // callback cập nhật tiến độ ngay khi uống
+                reminder -> onEducationalReminderClick(reminder)
         );
 
         todaysScheduleRecycler.setAdapter(adapter);
