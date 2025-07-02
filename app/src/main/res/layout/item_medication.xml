@@ -37,26 +37,36 @@
                 android:textColor="@color/text_secondary"
                 android:layout_marginBottom="4dp" />
 
-            <TextView
-                android:id="@+id/timeText"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Next: 08:00"
-                android:textSize="12sp"
-                android:textColor="@color/primary_green" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:baselineAligned="false">
+                <HorizontalScrollView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:scrollbars="none">
+                    <include layout="@layout/item_medication_doses_row" />
+                </HorizontalScrollView>
+                <Button
+                    android:id="@+id/takeDoseButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/button_primary_small"
+                    android:text="Uống"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:elevation="2dp"
+                    android:visibility="visible" />
+            </LinearLayout>
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/takeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:text="@string/take"
-            android:textSize="12sp"
-            android:textColor="@color/white"
-            android:background="@drawable/button_primary_small"
-            android:paddingHorizontal="16dp"
-            android:layout_gravity="center_vertical" />
 
     </LinearLayout>
 

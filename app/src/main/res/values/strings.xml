@@ -1,183 +1,183 @@
 <resources>
-    <string name="app_name">Medicine Reminder</string>
+    <string name="app_name">Nhắc uống thuốc</string>
 
     <!-- Navigation -->
-    <string name="back">Back</string>
+    <string name="back">Quay lại</string>
 
     <!-- Authentication -->
-    <string name="welcome_back">Welcome Back</string>
-    <string name="auth_instruction">Please authenticate to access your medications</string>
-    <string name="auth_failed">Authentication failed</string>
+    <string name="welcome_back">Chào mừng trở lại</string>
+    <string name="auth_instruction">Vui lòng xác thực để truy cập thuốc của bạn</string>
+    <string name="auth_failed">Xác thực thất bại</string>
 
     <!-- Add Medication -->
-    <string name="new_medication">New Medication</string>
-    <string name="medication_name">Medication Name</string>
-    <string name="dosage">Dosage</string>
-    <string name="how_often">How often do you take this medication?</string>
-    <string name="for_how_long">For how long?</string>
-    <string name="reminders">Reminders</string>
-    <string name="reminder_description">Get notified when it\'s time to take your medication</string>
-    <string name="starts">Starts %1$s</string>
-    <string name="adding">Adding...</string>
-    <string name="add_medication_button">Add Medication</string>
+    <string name="new_medication">Thêm thuốc mới</string>
+    <string name="medication_name">Tên thuốc</string>
+    <string name="dosage">Liều lượng</string>
+    <string name="how_often">Bạn uống thuốc này bao lâu một lần?</string>
+    <string name="for_how_long">Trong bao lâu?</string>
+    <string name="reminders">Nhắc nhở</string>
+    <string name="reminder_description">Nhận thông báo khi đến giờ uống thuốc</string>
+    <string name="starts">Bắt đầu %1$s</string>
+    <string name="adding">Đang thêm...</string>
+    <string name="add_medication_button">Thêm thuốc</string>
 
     <!-- Frequency Options -->
-    <string name="once_daily">Once daily</string>
-    <string name="twice_daily">Twice daily</string>
-    <string name="three_times_daily">Three times daily</string>
-    <string name="four_times_daily">Four times daily</string>
-    <string name="as_needed">As needed</string>
+    <string name="once_daily">Một lần mỗi ngày</string>
+    <string name="twice_daily">Hai lần mỗi ngày</string>
+    <string name="three_times_daily">Ba lần mỗi ngày</string>
+    <string name="four_times_daily">Bốn lần mỗi ngày</string>
+    <string name="as_needed">Khi cần thiết</string>
 
     <!-- Duration Options -->
-    <string name="days_7">7 days</string>
-    <string name="days_14">14 days</string>
-    <string name="days_30">30 days</string>
-    <string name="days_90">90 days</string>
-    <string name="ongoing">Ongoing</string>
+    <string name="days_7">7 ngày</string>
+    <string name="days_14">14 ngày</string>
+    <string name="days_30">30 ngày</string>
+    <string name="days_90">90 ngày</string>
+    <string name="ongoing">Liên tục</string>
 
     <!-- Home Screen -->
-    <string name="good_morning">Good Morning</string>
-    <string name="good_afternoon">Good Afternoon</string>
-    <string name="good_evening">Good Evening</string>
-    <string name="todays_medications">Today\'s Medications</string>
-    <string name="no_medications_today">No medications scheduled for today</string>
-    <string name="upcoming_doses">Upcoming Doses</string>
-    <string name="add_medication">Add Medication</string>
-    <string name="view_calendar">Calendar</string>
-    <string name="view_history">History</string>
-    <string name="refill_alerts">Refill Alerts</string>
+    <string name="good_morning">Chào buổi sáng</string>
+    <string name="good_afternoon">Chào buổi chiều</string>
+    <string name="good_evening">Chào buổi tối</string>
+    <string name="todays_medications">Thuốc hôm nay</string>
+    <string name="no_medications_today">Không có thuốc nào được lên lịch hôm nay</string>
+    <string name="upcoming_doses">Liều sắp tới</string>
+    <string name="add_medication">Thêm thuốc</string>
+    <string name="view_calendar">Lịch</string>
+    <string name="view_history">Lịch sử</string>
+    <string name="refill_alerts">Cảnh báo bổ sung thuốc</string>
 
     <!-- Medication Actions -->
-    <string name="take">Take</string>
-    <string name="skip">Skip</string>
-    <string name="miss">Skip</string>
-    <string name="complete">Complete</string>
-    <string name="dismiss">Dismiss</string>
-    <string name="completed">Completed</string>
-    <string name="pending">Pending</string>
+    <string name="take">Uống</string>
+    <string name="skip">Bỏ qua</string>
+    <string name="miss">Bỏ lỡ</string>
+    <string name="complete">Hoàn thành</string>
+    <string name="dismiss">Đóng</string>
+    <string name="completed">Đã hoàn thành</string>
+    <string name="pending">Đang chờ</string>
 
     <!-- Calendar -->
-    <string name="calendar">Calendar</string>
-    <string name="no_medications_selected_date">No medications scheduled for this date</string>
+    <string name="calendar">Lịch</string>
+    <string name="no_medications_selected_date">Không có thuốc nào được lên lịch cho ngày này</string>
 
     <!-- History -->
-    <string name="history">History</string>
-    <string name="all">All</string>
-    <string name="clear_all_data">Clear All Data</string>
-    <string name="no_history_found">No history found</string>
+    <string name="history">Lịch sử</string>
+    <string name="all">Tất cả</string>
+    <string name="clear_all_data">Xóa tất cả dữ liệu</string>
+    <string name="no_history_found">Không tìm thấy lịch sử</string>
 
     <!-- Refill -->
-    <string name="refill_alerts_title">Refill Alerts</string>
-    <string name="no_refill_alerts">No refill alerts at this time</string>
-    <string name="refill">Refill</string>
-    <string name="supply_low">Supply Low</string>
-    <string name="pills_left">pills left</string>
+    <string name="refill_alerts_title">Cảnh báo bổ sung thuốc</string>
+    <string name="no_refill_alerts">Hiện không có cảnh báo bổ sung thuốc</string>
+    <string name="refill">Bổ sung</string>
+    <string name="supply_low">Sắp hết thuốc</string>
+    <string name="pills_left">viên còn lại</string>
 
     <!-- Settings -->
-    <string name="refill_tracking">Refill Tracking</string>
-    <string name="refill_tracking_description">Track pill supply and get low stock alerts</string>
-    <string name="current_supply">Current Supply</string>
-    <string name="refill_threshold">Refill Threshold</string>
-    <string name="pills">pills</string>
+    <string name="refill_tracking">Theo dõi bổ sung</string>
+    <string name="refill_tracking_description">Theo dõi số lượng thuốc và nhận cảnh báo khi sắp hết</string>
+    <string name="current_supply">Số lượng hiện tại</string>
+    <string name="refill_threshold">Ngưỡng bổ sung</string>
+    <string name="pills">viên</string>
 
     <!-- Notifications -->
-    <string name="medication_reminder">Medication Reminder</string>
-    <string name="time_to_take">It\'s time to take your medication</string>
+    <string name="medication_reminder">Nhắc uống thuốc</string>
+    <string name="time_to_take">Đến giờ uống thuốc</string>
 
     <!-- Errors and Messages -->
-    <string name="error_empty_name">Please enter medication name</string>
-    <string name="error_empty_dosage">Please enter dosage</string>
-    <string name="error_select_frequency">Please select frequency</string>
-    <string name="error_select_duration">Please select duration</string>
-    <string name="medication_added_success">Medication added successfully</string>
-    <string name="medication_updated_success">Medication updated successfully</string>
-    <string name="medication_deleted_success">Medication deleted successfully</string>
+    <string name="error_empty_name">Vui lòng nhập tên thuốc</string>
+    <string name="error_empty_dosage">Vui lòng nhập liều lượng</string>
+    <string name="error_select_frequency">Vui lòng chọn tần suất</string>
+    <string name="error_select_duration">Vui lòng chọn thời gian</string>
+    <string name="medication_added_success">Thêm thuốc thành công</string>
+    <string name="medication_updated_success">Cập nhật thuốc thành công</string>
+    <string name="medication_deleted_success">Xóa thuốc thành công</string>
 
     <!-- Dialog Messages -->
-    <string name="confirm_delete">Confirm Delete</string>
-    <string name="delete_medication_message">Are you sure you want to delete this medication?</string>
-    <string name="delete">Delete</string>
-    <string name="cancel">Cancel</string>
-    <string name="ok">OK</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <string name="confirm_delete">Xác nhận xóa</string>
+    <string name="delete_medication_message">Bạn có chắc muốn xóa thuốc này không?</string>
+    <string name="delete">Xóa</string>
+    <string name="cancel">Hủy</string>
+    <string name="ok">Đồng ý</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
 
     <!-- Time -->
-    <string name="morning">Morning</string>
-    <string name="afternoon">Afternoon</string>
-    <string name="evening">Evening</string>
-    <string name="night">Night</string>
-    <string name="today">Today</string>
-    <string name="tomorrow">Tomorrow</string>
-    <string name="yesterday">Yesterday</string>
+    <string name="morning">Sáng</string>
+    <string name="afternoon">Chiều</string>
+    <string name="evening">Tối</string>
+    <string name="night">Đêm</string>
+    <string name="today">Hôm nay</string>
+    <string name="tomorrow">Ngày mai</string>
+    <string name="yesterday">Hôm qua</string>
 
     <!-- Refill Dialog -->
-    <string name="refill_medication">Refill Medication</string>
-    <string name="current_supply_label">Current Supply:</string>
-    <string name="new_supply">New Supply</string>
-    <string name="enter_new_supply">Enter new supply amount</string>
-    <string name="update_supply">Update Supply</string>
+    <string name="refill_medication">Bổ sung thuốc</string>
+    <string name="current_supply_label">Số lượng hiện tại:</string>
+    <string name="new_supply">Số lượng mới</string>
+    <string name="enter_new_supply">Nhập số lượng mới</string>
+    <string name="update_supply">Cập nhật số lượng</string>
 
-    <string name="history_log">History Log</string>
-    <string name="refill_tracker">Refill Tracker</string>
-    <string name="todays_schedule">Today\'s Schedule</string>
-    <string name="see_all">See All</string>
-    <string name="refill_tracker_title">Refill Tracker</string>
-    <string name="app_tagline">Never miss a dose</string>
-    <string name="record_refill">Record Refill</string>
-    <string name="calendar_view">Calendar View</string>
-    <string name="alert_at">Alert at</string>
-    <string name="refill_description">Track your medication supply and get notified when you\'re running low</string>
+    <string name="history_log">Nhật ký lịch sử</string>
+    <string name="refill_tracker">Theo dõi bổ sung</string>
+    <string name="todays_schedule">Lịch hôm nay</string>
+    <string name="see_all">Xem tất cả</string>
+    <string name="refill_tracker_title">Theo dõi bổ sung</string>
+    <string name="app_tagline">Không bao giờ quên uống thuốc</string>
+    <string name="record_refill">Ghi nhận bổ sung</string>
+    <string name="calendar_view">Xem lịch</string>
+    <string name="alert_at">Báo lúc</string>
+    <string name="refill_description">Theo dõi số lượng thuốc và nhận thông báo khi sắp hết</string>
 
     <!-- Educational Reminders -->
-    <string name="educational_reminders">Educational Reminders</string>
-    <string name="add_reminder">Add Reminder</string>
-    <string name="study_sessions">Study Sessions</string>
-    <string name="assignments">Assignments</string>
-    <string name="exams">Exams</string>
-    <string name="language_practice">Language Practice</string>
-    <string name="today_s_reminders">Today\'s Reminders</string>
-    <string name="upcoming_reminders">Upcoming Reminders</string>
-    <string name="no_reminders_today">No reminders for today</string>
-    <string name="no_upcoming_reminders">No upcoming reminders</string>
-    <string name="add_educational_reminder">Add Educational Reminder</string>
-    <string name="edit_educational_reminder">Edit Educational Reminder</string>
-    <string name="title">Title</string>
-    <string name="description">Description</string>
-    <string name="reminder_type">Reminder Type</string>
-    <string name="date">Date</string>
-    <string name="time">Time</string>
-    <string name="priority">Priority</string>
-    <string name="high">High</string>
-    <string name="medium">Medium</string>
-    <string name="low">Low</string>
-    <string name="notes_optional">Notes (Optional)</string>
-    <string name="enable_notifications">Enable Notifications</string>
-    <string name="save">Save</string>
-    <string name="select_date">Select Date</string>
-    <string name="select_time">Select Time</string>
-    <string name="close">Close</string>
-    <string name="delete_reminder">Delete Reminder</string>
-    <string name="reminder_added_success">Reminder added successfully</string>
-    <string name="reminder_updated_success">Reminder updated successfully</string>
-    <string name="reminder_deleted_success">Reminder deleted successfully</string>
-    <string name="error_empty_title">Please enter a title</string>
-    <string name="error_select_type">Please select a type</string>
-    <string name="error_select_date">Please select a date</string>
-    <string name="error_select_time">Please select a time</string>
-    <string name="reminder_type_icon">Reminder Type Icon</string>
-    <string name="notifications">Notifications</string>
-    <string name="daily_progress">Daily Progress</string>
-    <string name="quick_actions">Quick Actions</string>
-    <string name="doses_progress">%1$d of %2$d doses</string>
-    <string name="delete_reminder_message">Are you sure you want to delete this reminder?</string>
-    <string name="educational_reminder_notification">Educational Reminder</string>
-    <string name="reminder_details">Reminder Details</string>
-    <string name="scheduling">Scheduling</string>
+    <string name="educational_reminders">Nhắc nhở học tập</string>
+    <string name="add_reminder">Thêm nhắc nhở</string>
+    <string name="study_sessions">Buổi học</string>
+    <string name="assignments">Bài tập</string>
+    <string name="exams">Kỳ thi</string>
+    <string name="language_practice">Luyện tập ngôn ngữ</string>
+    <string name="today_s_reminders">Nhắc nhở hôm nay</string>
+    <string name="upcoming_reminders">Nhắc nhở sắp tới</string>
+    <string name="no_reminders_today">Không có nhắc nhở hôm nay</string>
+    <string name="no_upcoming_reminders">Không có nhắc nhở sắp tới</string>
+    <string name="add_educational_reminder">Thêm nhắc nhở học tập</string>
+    <string name="edit_educational_reminder">Chỉnh sửa nhắc nhở học tập</string>
+    <string name="title">Tiêu đề</string>
+    <string name="description">Mô tả</string>
+    <string name="reminder_type">Loại nhắc nhở</string>
+    <string name="date">Ngày</string>
+    <string name="time">Thời gian</string>
+    <string name="priority">Ưu tiên</string>
+    <string name="high">Cao</string>
+    <string name="medium">Trung bình</string>
+    <string name="low">Thấp</string>
+    <string name="notes_optional">Ghi chú (không bắt buộc)</string>
+    <string name="enable_notifications">Bật thông báo</string>
+    <string name="save">Lưu</string>
+    <string name="select_date">Chọn ngày</string>
+    <string name="select_time">Chọn thời gian</string>
+    <string name="close">Đóng</string>
+    <string name="delete_reminder">Xóa nhắc nhở</string>
+    <string name="reminder_added_success">Thêm nhắc nhở thành công</string>
+    <string name="reminder_updated_success">Cập nhật nhắc nhở thành công</string>
+    <string name="reminder_deleted_success">Xóa nhắc nhở thành công</string>
+    <string name="error_empty_title">Vui lòng nhập tiêu đề</string>
+    <string name="error_select_type">Vui lòng chọn loại</string>
+    <string name="error_select_date">Vui lòng chọn ngày</string>
+    <string name="error_select_time">Vui lòng chọn thời gian</string>
+    <string name="reminder_type_icon">Biểu tượng loại nhắc nhở</string>
+    <string name="notifications">Thông báo</string>
+    <string name="daily_progress">Tiến độ hàng ngày</string>
+    <string name="quick_actions">Hành động nhanh</string>
+    <string name="doses_progress">%1$d trong %2$d liều</string>
+    <string name="delete_reminder_message">Bạn có chắc muốn xóa nhắc nhở này không?</string>
+    <string name="educational_reminder_notification">Nhắc nhở học tập</string>
+    <string name="reminder_details">Chi tiết nhắc nhở</string>
+    <string name="scheduling">Lên lịch</string>
 
     <!-- Reminder Categories -->
-    <string name="medicine_reminders">Medicine Reminders</string>
-    <string name="social_reminders">Social Reminders</string>
-    <string name="health_reminders">Health Reminders</string>
-    <string name="sleep_reminders">Sleep Reminders</string>
+    <string name="medicine_reminders">Nhắc nhở uống thuốc</string>
+    <string name="social_reminders">Nhắc nhở xã hội</string>
+    <string name="health_reminders">Nhắc nhở sức khỏe</string>
+    <string name="sleep_reminders">Nhắc nhở giấc ngủ</string>
 </resources>

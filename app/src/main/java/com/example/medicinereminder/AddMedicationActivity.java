@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.CheckBox;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -46,6 +48,10 @@ public class AddMedicationActivity extends AppCompatActivity {
     // Duration selection
     private CardView days7Card, days14Card, days30Card, days90Card, ongoingCard;
     private TextView days7Text, days14Text, days30Text, days90Text, ongoingText;
+
+    // Time slot selection
+    private LinearLayout timeSlotLayout;
+    private CheckBox timeMorning, timeNoon, timeAfternoon, timeEvening;
 
     private String selectedFrequency = "once";
     private int selectedDuration = 7;
@@ -103,6 +109,13 @@ public class AddMedicationActivity extends AppCompatActivity {
         days30Text = findViewById(R.id.days30Text);
         days90Text = findViewById(R.id.days90Text);
         ongoingText = findViewById(R.id.ongoingText);
+        // Time slot selection
+        timeSlotLayout = findViewById(R.id.timeSlotLayout);
+        timeMorning = findViewById(R.id.timeMorning);
+        timeNoon = findViewById(R.id.timeNoon);
+        timeAfternoon = findViewById(R.id.timeAfternoon);
+        timeEvening = findViewById(R.id.timeEvening);
+        hideTimeSlotLayout();
     }
 
     private void setupClickListeners() {
@@ -182,33 +195,63 @@ public class AddMedicationActivity extends AppCompatActivity {
 
     private void selectFrequency(String frequency) {
         selectedFrequency = frequency;
-
-        // Reset all cards
         resetFrequencyCards();
-
-        // Highlight selected card
+        hideTimeSlotLayout();
         switch (frequency) {
             case "once":
                 onceCard.setCardBackgroundColor(getResources().getColor(R.color.primary_green));
                 onceText.setTextColor(getResources().getColor(R.color.white));
+                showTimeSlotLayout(1);
                 break;
             case "twice":
                 twiceCard.setCardBackgroundColor(getResources().getColor(R.color.primary_green));
                 twiceText.setTextColor(getResources().getColor(R.color.white));
+                showTimeSlotLayout(2);
                 break;
             case "three_times":
                 threeTimesCard.setCardBackgroundColor(getResources().getColor(R.color.primary_green));
                 threeTimesText.setTextColor(getResources().getColor(R.color.white));
+                // Mặc định chọn sáng, trưa, chiều
+                showTimeSlotLayout(3);
                 break;
             case "four_times":
                 fourTimesCard.setCardBackgroundColor(getResources().getColor(R.color.primary_green));
                 fourTimesText.setTextColor(getResources().getColor(R.color.white));
+                hideTimeSlotLayout();
                 break;
             case "as_needed":
                 asNeededCard.setCardBackgroundColor(getResources().getColor(R.color.primary_green));
                 asNeededText.setTextColor(getResources().getColor(R.color.white));
+                hideTimeSlotLayout();
                 break;
         }
+    }
+
+    private void showTimeSlotLayout(int count) {
+        timeSlotLayout.setVisibility(View.VISIBLE);
+        // Reset all
+        timeMorning.setChecked(false);
+        timeNoon.setChecked(false);
+        timeAfternoon.setChecked(false);
+        timeEvening.setChecked(false);
+        timeMorning.setEnabled(true);
+        timeNoon.setEnabled(true);
+        timeAfternoon.setEnabled(true);
+        timeEvening.setEnabled(true);
+        if (count == 3) {
+            // Mặc định chọn sáng, trưa, chiều
+            timeMorning.setChecked(true);
+            timeNoon.setChecked(true);
+            timeAfternoon.setChecked(true);
+            timeMorning.setEnabled(false);
+            timeNoon.setEnabled(false);
+            timeAfternoon.setEnabled(false);
+            timeEvening.setEnabled(false);
+        }
+    }
+
+    private void hideTimeSlotLayout() {
+        timeSlotLayout.setVisibility(View.GONE);
     }
 
     private void selectDuration(int duration) {
@@ -303,9 +346,42 @@ public class AddMedicationActivity extends AppCompatActivity {
             medication.setRefillThreshold(refillThresholdSeeker.getProgress());
         }
 
-        // Set default reminder times
+        // Set reminder times theo lựa chọn
         if (reminderSwitch.isChecked()) {
-            medication.setReminderTimes(medication.getDefaultReminderTimes());
+            List<String> times = new ArrayList<>();
+            if (selectedFrequency.equals("once")) {
+                if (timeMorning.isChecked()) times.add("08:00");
+                if (timeNoon.isChecked()) times.add("11:00");
+                if (timeAfternoon.isChecked()) times.add("17:00");
+                if (timeEvening.isChecked()) times.add("20:00");
+                if (times.size() != 1) {
+                    Toast.makeText(this, "Chọn đúng 1 khung giờ", Toast.LENGTH_SHORT).show();
+                    addMedicationButton.setEnabled(true);
+                    addMedicationButton.setText(getString(R.string.add_medication_button));
+                    return;
+                }
+            } else if (selectedFrequency.equals("twice")) {
+                if (timeMorning.isChecked()) times.add("08:00");
+                if (timeNoon.isChecked()) times.add("11:00");
+                if (timeAfternoon.isChecked()) times.add("17:00");
+                if (timeEvening.isChecked()) times.add("20:00");
+                if (times.size() != 2) {
+                    Toast.makeText(this, "Chọn đúng 2 khung giờ", Toast.LENGTH_SHORT).show();
+                    addMedicationButton.setEnabled(true);
+                    addMedicationButton.setText(getString(R.string.add_medication_button));
+                    return;
+                }
+            } else if (selectedFrequency.equals("three_times")) {
+                times.add("08:00");
+                times.add("11:00");
+                times.add("17:00");
+            } else if (selectedFrequency.equals("four_times")) {
+                times.add("08:00");
+                times.add("11:00");
+                times.add("17:00");
+                times.add("20:00");
+            }
+            medication.setReminderTimes(times);
         }
 
         // Save to database

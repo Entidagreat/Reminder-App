@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="4dp">
+
+    <TextView
+        android:id="@+id/doseTimeText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="08:00"
+        android:textSize="14sp"
+        android:textColor="@color/text_primary"
+        android:gravity="center_vertical" />
+
+    <Button
+        android:id="@+id/takeDoseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:text="@string/take"
+        android:textSize="12sp"
+        android:textColor="@color/white"
+        android:background="@drawable/button_primary_small"
+        android:paddingHorizontal="16dp"
+        android:layout_gravity="center_vertical" />
+</LinearLayout>

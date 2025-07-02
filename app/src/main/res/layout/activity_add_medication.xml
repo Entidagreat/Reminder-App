@@ -223,6 +223,53 @@
 
         </LinearLayout>
 
+        <!-- Time Slot Selection (for once/twice per day) -->
+        <LinearLayout
+            android:id="@+id/timeSlotLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chọn khung giờ uống thuốc"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="8dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <CheckBox
+                    android:id="@+id/timeMorning"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sáng (8:00)" />
+                <CheckBox
+                    android:id="@+id/timeNoon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Trưa (11:00)" />
+                <CheckBox
+                    android:id="@+id/timeAfternoon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Chiều (17:00)" />
+                <CheckBox
+                    android:id="@+id/timeEvening"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Tối (20:00)" />
+            </LinearLayout>
+        </LinearLayout>
+
         <!-- Duration Selection -->
         <TextView
             android:layout_width="wrap_content"

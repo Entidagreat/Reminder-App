@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Assemble Debug APK",
+			"command": "./gradlew assembleDebug",
+			"group": "build",
+			"isBackground": false
+		}
+	]
+}
