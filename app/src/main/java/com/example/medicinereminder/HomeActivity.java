@@ -2,6 +2,7 @@ package com.example.medicinereminder;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -25,6 +26,11 @@ public class HomeActivity extends AppCompatActivity {
     private DatabaseHelper dbHelper;
     private MedicationAdapter medicationAdapter;
 
+    // Timer for auto refresh
+    private Handler autoRefreshHandler;
+    private Runnable autoRefreshRunnable;
+    private static final int AUTO_REFRESH_INTERVAL = 60000; // 60 seconds
+
     private TextView progressText;
     private ProgressBar dailyProgressBar;
     private RecyclerView todaysScheduleRecycler;
@@ -44,6 +50,7 @@ public class HomeActivity extends AppCompatActivity {
         dbHelper = new DatabaseHelper(this);
         initViews();
         setupClickListeners();
+        setupAutoRefresh(); // Setup timer for auto refresh
         loadData();
     }
 
@@ -51,6 +58,24 @@ public class HomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadData(); // Refresh data when returning to home
+        // Start auto refresh when activity is resumed
+        autoRefreshHandler.postDelayed(autoRefreshRunnable, AUTO_REFRESH_INTERVAL);
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Stop auto refresh when activity is paused
+        autoRefreshHandler.removeCallbacks(autoRefreshRunnable);
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Make sure to remove all callbacks to prevent memory leaks
+        if (autoRefreshHandler != null) {
+            autoRefreshHandler.removeCallbacks(autoRefreshRunnable);
+        }
+        super.onDestroy();
     }
 
     private void initViews() {
@@ -101,6 +126,22 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, CalendarActivity.class);
             startActivity(intent);
         });
+    }
+
+    // Setup auto refresh timer
+    private void setupAutoRefresh() {
+        autoRefreshHandler = new Handler();
+        autoRefreshRunnable = new Runnable() {
+            @Override
+            public void run() {
+                // Check if activity is still active before refreshing
+                if (!isFinishing() && !isDestroyed()) {
+                    loadData(); // Refresh data
+                }
+                // Schedule the next refresh
+                autoRefreshHandler.postDelayed(this, AUTO_REFRESH_INTERVAL);
+            }
+        };
     }
 
     private void loadData() {
