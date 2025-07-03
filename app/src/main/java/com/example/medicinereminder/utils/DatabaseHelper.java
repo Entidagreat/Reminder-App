@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.example.medicinereminder.models.Medication;
 import com.example.medicinereminder.models.DoseHistory;
-import com.example.medicinereminder.models.EducationalReminder;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -20,12 +19,11 @@ import java.util.Locale;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "MedicineReminder.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
 
     // Tables
     private static final String TABLE_MEDICATIONS = "medications";
     private static final String TABLE_DOSE_HISTORY = "dose_history";
-    private static final String TABLE_EDUCATIONAL_REMINDERS = "educational_reminders"; // New table
 
     // Medications table columns
     private static final String KEY_ID = "id";
@@ -50,17 +48,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_TAKEN_TIME = "taken_time";
     private static final String KEY_STATUS = "status";
     private static final String KEY_NOTES = "notes";
-
-    // Educational reminders table columns
-    private static final String KEY_TITLE = "title";
-    private static final String KEY_DESCRIPTION = "description";
-    private static final String KEY_TYPE = "type";
-    private static final String KEY_REMINDER_DATE = "reminder_date";
-    private static final String KEY_REMINDER_TIME = "reminder_time";
-    private static final String KEY_IS_COMPLETED = "is_completed";
-    private static final String KEY_PRIORITY = "priority";
-    private static final String KEY_NOTIFICATION_ENABLED = "notification_enabled";
-
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
     private Gson gson = new Gson();
 
@@ -97,44 +84,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + KEY_NOTES + " TEXT,"
                 + "FOREIGN KEY(" + KEY_MEDICATION_ID + ") REFERENCES " + TABLE_MEDICATIONS + "(" + KEY_ID + ")"
                 + ")";
-                
-        String CREATE_EDUCATIONAL_REMINDERS_TABLE = "CREATE TABLE " + TABLE_EDUCATIONAL_REMINDERS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + KEY_TITLE + " TEXT NOT NULL,"
-                + KEY_DESCRIPTION + " TEXT,"
-                + KEY_TYPE + " TEXT,"
-                + KEY_REMINDER_DATE + " TEXT,"
-                + KEY_REMINDER_TIME + " TEXT,"
-                + KEY_IS_COMPLETED + " INTEGER DEFAULT 0,"
-                + KEY_PRIORITY + " INTEGER DEFAULT 2,"
-                + KEY_NOTES + " TEXT,"
-                + KEY_NOTIFICATION_ENABLED + " INTEGER DEFAULT 1"
-                + ")";
 
         db.execSQL(CREATE_MEDICATIONS_TABLE);
         db.execSQL(CREATE_DOSE_HISTORY_TABLE);
-        db.execSQL(CREATE_EDUCATIONAL_REMINDERS_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Instead of dropping all tables, only add the missing ones
-        if (oldVersion < 2) {
-            // Create educational reminders table if upgrading from version 1
-            String CREATE_EDUCATIONAL_REMINDERS_TABLE = "CREATE TABLE " + TABLE_EDUCATIONAL_REMINDERS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + KEY_TITLE + " TEXT NOT NULL,"
-                + KEY_DESCRIPTION + " TEXT,"
-                + KEY_TYPE + " TEXT,"
-                + KEY_REMINDER_DATE + " TEXT,"
-                + KEY_REMINDER_TIME + " TEXT,"
-                + KEY_IS_COMPLETED + " INTEGER DEFAULT 0,"
-                + KEY_PRIORITY + " INTEGER DEFAULT 2,"
-                + KEY_NOTES + " TEXT,"
-                + KEY_NOTIFICATION_ENABLED + " INTEGER DEFAULT 1"
-                + ")";
-            db.execSQL(CREATE_EDUCATIONAL_REMINDERS_TABLE);
-        }
+//        if (oldVersion < 2) {
+//            // Create educational reminders table if upgrading from version 1
+//            String CREATE_EDUCATIONAL_REMINDERS_TABLE = "CREATE TABLE " + TABLE_EDUCATIONAL_REMINDERS + "("
+//                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+//                + KEY_TITLE + " TEXT NOT NULL,"
+//                + KEY_DESCRIPTION + " TEXT,"
+//                + KEY_TYPE + " TEXT,"
+//                + KEY_REMINDER_DATE + " TEXT,"
+//                + KEY_REMINDER_TIME + " TEXT,"
+//                + KEY_IS_COMPLETED + " INTEGER DEFAULT 0,"
+//                + KEY_PRIORITY + " INTEGER DEFAULT 2,"
+//                + KEY_NOTES + " TEXT,"
+//                + KEY_NOTIFICATION_ENABLED + " INTEGER DEFAULT 1"
+//                + ")";
+//            db.execSQL(CREATE_EDUCATIONAL_REMINDERS_TABLE);
+//        }
     }
 
     // Medication CRUD operations
@@ -305,263 +278,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_DOSE_HISTORY, null, null);
         db.delete(TABLE_MEDICATIONS, null, null);
-        db.delete(TABLE_EDUCATIONAL_REMINDERS, null, null); // Clear educational reminders table
         db.close();
-    }
-
-    // Educational Reminder CRUD operations
-    
-    // Add a new educational reminder
-    public long addEducationalReminder(EducationalReminder reminder) {
-        // Ensure table exists
-        ensureEducationalRemindersTableExists();
-        
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        
-        values.put(KEY_TITLE, reminder.getTitle());
-        values.put(KEY_DESCRIPTION, reminder.getDescription());
-        values.put(KEY_TYPE, reminder.getType());
-        values.put(KEY_REMINDER_DATE, dateFormat.format(reminder.getReminderDate()));
-        values.put(KEY_REMINDER_TIME, reminder.getReminderTime());
-        values.put(KEY_IS_COMPLETED, reminder.isCompleted() ? 1 : 0);
-        values.put(KEY_PRIORITY, reminder.getPriority());
-        values.put(KEY_NOTES, reminder.getNotes());
-        values.put(KEY_NOTIFICATION_ENABLED, reminder.isNotificationEnabled() ? 1 : 0);
-        
-        long id = db.insert(TABLE_EDUCATIONAL_REMINDERS, null, values);
-        db.close();
-        
-        return id;
-    }
-    
-    // Get a single educational reminder by ID
-    public EducationalReminder getEducationalReminder(int id) {
-        // Ensure table exists
-        ensureEducationalRemindersTableExists();
-        
-        SQLiteDatabase db = this.getReadableDatabase();
-        
-        Cursor cursor = db.query(
-                TABLE_EDUCATIONAL_REMINDERS,
-                null,
-                KEY_ID + "=?",
-                new String[]{String.valueOf(id)},
-                null, null, null);
-        
-        EducationalReminder reminder = null;
-        
-        if (cursor != null && cursor.moveToFirst()) {
-            reminder = cursorToEducationalReminder(cursor);
-            cursor.close();
-        }
-        
-        db.close();
-        return reminder;
-    }
-    
-    // Helper method to convert cursor to EducationalReminder object
-    private EducationalReminder cursorToEducationalReminder(Cursor cursor) {
-        EducationalReminder reminder = new EducationalReminder();
-        
-        reminder.setId(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_ID)));
-        reminder.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(KEY_TITLE)));
-        reminder.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(KEY_DESCRIPTION)));
-        reminder.setType(cursor.getString(cursor.getColumnIndexOrThrow(KEY_TYPE)));
-        
-        try {
-            String reminderDateStr = cursor.getString(cursor.getColumnIndexOrThrow(KEY_REMINDER_DATE));
-            if (reminderDateStr != null && !reminderDateStr.isEmpty()) {
-                reminder.setReminderDate(dateFormat.parse(reminderDateStr));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        reminder.setReminderTime(cursor.getString(cursor.getColumnIndexOrThrow(KEY_REMINDER_TIME)));
-        reminder.setCompleted(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_IS_COMPLETED)) == 1);
-        reminder.setPriority(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_PRIORITY)));
-        reminder.setNotes(cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTES)));
-        reminder.setNotificationEnabled(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_NOTIFICATION_ENABLED)) == 1);
-        
-        return reminder;
-    }
-    
-    // Get all educational reminders
-    public List<EducationalReminder> getAllEducationalReminders() {
-        // Ensure table exists
-        ensureEducationalRemindersTableExists();
-        
-        List<EducationalReminder> reminderList = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + TABLE_EDUCATIONAL_REMINDERS + " ORDER BY " + KEY_REMINDER_DATE + " ASC";
-        
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        
-        if (cursor.moveToFirst()) {
-            do {
-                EducationalReminder reminder = cursorToEducationalReminder(cursor);
-                reminderList.add(reminder);
-            } while (cursor.moveToNext());
-        }
-        
-        cursor.close();
-        db.close();
-        
-        return reminderList;
-    }
-    
-    // Get today's educational reminders
-    public List<EducationalReminder> getTodaysEducationalReminders() {
-        List<EducationalReminder> allReminders = getAllEducationalReminders();
-        List<EducationalReminder> todaysReminders = new ArrayList<>();
-        
-        for (EducationalReminder reminder : allReminders) {
-            if (reminder.isDueToday() && !reminder.isCompleted()) {
-                todaysReminders.add(reminder);
-            }
-        }
-        
-        return todaysReminders;
-    }
-    
-    // Get all upcoming educational reminders (including today's)
-    public List<EducationalReminder> getUpcomingEducationalReminders() {
-        List<EducationalReminder> allReminders = getAllEducationalReminders();
-        List<EducationalReminder> upcomingReminders = new ArrayList<>();
-        
-        Date today = new Date();
-        for (EducationalReminder reminder : allReminders) {
-            if (!reminder.isCompleted() && reminder.getReminderDate() != null && 
-                (reminder.getReminderDate().after(today) || reminder.isDueToday())) {
-                upcomingReminders.add(reminder);
-            }
-        }
-        
-        return upcomingReminders;
-    }
-    
-    // Update an educational reminder
-    public int updateEducationalReminder(EducationalReminder reminder) {
-        // Ensure table exists
-        ensureEducationalRemindersTableExists();
-        
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        
-        values.put(KEY_TITLE, reminder.getTitle());
-        values.put(KEY_DESCRIPTION, reminder.getDescription());
-        values.put(KEY_TYPE, reminder.getType());
-        values.put(KEY_REMINDER_DATE, dateFormat.format(reminder.getReminderDate()));
-        values.put(KEY_REMINDER_TIME, reminder.getReminderTime());
-        values.put(KEY_IS_COMPLETED, reminder.isCompleted() ? 1 : 0);
-        values.put(KEY_PRIORITY, reminder.getPriority());
-        values.put(KEY_NOTES, reminder.getNotes());
-        values.put(KEY_NOTIFICATION_ENABLED, reminder.isNotificationEnabled() ? 1 : 0);
-        
-        // Update the reminder where id = ?
-        int result = db.update(TABLE_EDUCATIONAL_REMINDERS, values, KEY_ID + " = ?", 
-            new String[] { String.valueOf(reminder.getId()) });
-        
-        db.close();
-        return result;
-    }
-    
-    // Mark an educational reminder as completed
-    public int markEducationalReminderAsCompleted(int reminderId, boolean completed) {
-        // Ensure table exists
-        ensureEducationalRemindersTableExists();
-        
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_IS_COMPLETED, completed ? 1 : 0);
-        
-        int rowsAffected = db.update(
-                TABLE_EDUCATIONAL_REMINDERS,
-                values,
-                KEY_ID + " = ?",
-                new String[]{String.valueOf(reminderId)}
-        );
-        
-        db.close();
-        return rowsAffected;
-    }
-    
-    // Delete an educational reminder
-    public void deleteEducationalReminder(int reminderId) {
-        // Ensure table exists
-        ensureEducationalRemindersTableExists();
-        
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(
-                TABLE_EDUCATIONAL_REMINDERS,
-                KEY_ID + " = ?",
-                new String[]{String.valueOf(reminderId)}
-        );
-        db.close();
-    }
-    
-    // Get educational reminders by type
-    public List<EducationalReminder> getEducationalRemindersByType(String type) {
-        // Ensure table exists
-        ensureEducationalRemindersTableExists();
-        
-        List<EducationalReminder> reminderList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        
-        Cursor cursor = db.query(
-                TABLE_EDUCATIONAL_REMINDERS,
-                null,
-                KEY_TYPE + "=?",
-                new String[]{type},
-                null, null, 
-                KEY_REMINDER_DATE + " ASC"
-        );
-        
-        if (cursor.moveToFirst()) {
-            do {
-                EducationalReminder reminder = cursorToEducationalReminder(cursor);
-                reminderList.add(reminder);
-            } while (cursor.moveToNext());
-        }
-        
-        cursor.close();
-        db.close();
-        
-        return reminderList;
-    }
-
-    // Check if table exists and create it if not
-    private void ensureEducationalRemindersTableExists() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        
-        // Check if the table exists
-        Cursor cursor = db.rawQuery(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
-                new String[]{TABLE_EDUCATIONAL_REMINDERS});
-                
-        boolean tableExists = cursor != null && cursor.getCount() > 0;
-        
-        if (cursor != null) {
-            cursor.close();
-        }
-        
-        // Create table if it doesn't exist
-        if (!tableExists) {
-            String CREATE_EDUCATIONAL_REMINDERS_TABLE = "CREATE TABLE " + TABLE_EDUCATIONAL_REMINDERS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + KEY_TITLE + " TEXT NOT NULL,"
-                + KEY_DESCRIPTION + " TEXT,"
-                + KEY_TYPE + " TEXT,"
-                + KEY_REMINDER_DATE + " TEXT,"
-                + KEY_REMINDER_TIME + " TEXT,"
-                + KEY_IS_COMPLETED + " INTEGER DEFAULT 0,"
-                + KEY_PRIORITY + " INTEGER DEFAULT 2,"
-                + KEY_NOTES + " TEXT,"
-                + KEY_NOTIFICATION_ENABLED + " INTEGER DEFAULT 1"
-                + ")";
-            db.execSQL(CREATE_EDUCATIONAL_REMINDERS_TABLE);
-        }
     }
 
     // Helper method to convert cursor to Medication object
@@ -650,29 +367,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             
         db.close();
         return result;
-    }
-
-    // Add this method to the DatabaseHelper class
-    public List<EducationalReminder> getEducationalRemindersForDate(Date date) {
-        // Ensure table exists
-        ensureEducationalRemindersTableExists();
-        
-        List<EducationalReminder> allReminders = getAllEducationalReminders();
-        List<EducationalReminder> remindersForDate = new ArrayList<>();
-        
-        // Format date for comparison
-        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String dateString = dayFormat.format(date);
-        
-        for (EducationalReminder reminder : allReminders) {
-            if (reminder.getReminderDate() != null) {
-                String reminderDateString = dayFormat.format(reminder.getReminderDate());
-                if (dateString.equals(reminderDateString)) {
-                    remindersForDate.add(reminder);
-                }
-            }
-        }
-        
-        return remindersForDate;
     }
 }

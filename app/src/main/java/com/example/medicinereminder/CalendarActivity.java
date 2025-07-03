@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.medicinereminder.adapters.CalendarAdapter;
 import com.example.medicinereminder.models.DoseHistory;
-import com.example.medicinereminder.models.EducationalReminder;
 import com.example.medicinereminder.models.Medication;
 import com.example.medicinereminder.utils.DatabaseHelper;
 import java.text.SimpleDateFormat;
@@ -108,18 +107,6 @@ public class CalendarActivity extends AppCompatActivity {
                 }
             }
         }
-
-        // Get educational reminders for the selected date
-        List<EducationalReminder> educationalReminders = dbHelper.getEducationalRemindersForDate(date);
-
-        // Add educational reminders to the list
-        for (EducationalReminder reminder : educationalReminders) {
-            CalendarItem item = new CalendarItem();
-            item.type = "educational";
-            item.educationalReminder = reminder;
-            itemsForDate.add(item);
-        }
-
         if (itemsForDate.isEmpty()) {
             medicationsRecycler.setVisibility(android.view.View.GONE);
             noMedicationsText.setVisibility(android.view.View.VISIBLE);
@@ -193,8 +180,6 @@ public class CalendarActivity extends AppCompatActivity {
     private void onCalendarItemAction(CalendarItem item, String action) {
         if ("medication".equals(item.type)) {
             handleMedicationAction(item, action);
-        } else if ("educational".equals(item.type)) {
-            handleEducationalAction(item, action);
         }
 
         // Refresh the view
@@ -249,16 +234,6 @@ public class CalendarActivity extends AppCompatActivity {
         }
     }
 
-    private void handleEducationalAction(CalendarItem item, String action) {
-        if (item.educationalReminder == null) return;
-        
-        // Update the reminder's completion status
-        item.educationalReminder.setCompleted("completed".equals(action));
-        
-        // Update in database
-        dbHelper.updateEducationalReminder(item.educationalReminder);
-    }
-
     public static class CalendarMedicationItem {
         public Medication medication;
         public int doseNumber;
@@ -273,6 +248,5 @@ public class CalendarActivity extends AppCompatActivity {
         public int doseNumber;
         public String scheduledTime;
         public DoseHistory doseHistory;
-        public EducationalReminder educationalReminder;
     }
 }

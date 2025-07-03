@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medicinereminder.R;
-import com.example.medicinereminder.models.EducationalReminder;
 import com.example.medicinereminder.models.Medication;
 
 import java.util.ArrayList;
@@ -46,55 +45,41 @@ public class CombinedReminderAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
     
     private static final int VIEW_TYPE_MEDICATION = 0;
-    private static final int VIEW_TYPE_EDUCATIONAL = 1;
-    
+
     private List<Object> items = new ArrayList<>();
     private Consumer<Medication> medicationClickListener;
     private OnDoseTakenListener onDoseTakenListener;
-    private Consumer<EducationalReminder> educationalClickListener;
     
     public CombinedReminderAdapter(
-            List<Medication> medications, 
-            List<EducationalReminder> educationalReminders,
+            List<Medication> medications,
             Consumer<Medication> medicationClickListener,
-            OnDoseTakenListener onDoseTakenListener,
-            Consumer<EducationalReminder> educationalClickListener) {
+            OnDoseTakenListener onDoseTakenListener) {
         
         this.medicationClickListener = medicationClickListener;
         this.onDoseTakenListener = onDoseTakenListener;
-        this.educationalClickListener = educationalClickListener;
         
         // Add all items to combined list
         if (medications != null) {
             items.addAll(medications);
         }
-        
-        if (educationalReminders != null) {
-            items.addAll(educationalReminders);
-        }
     }
     
     @Override
     public int getItemViewType(int position) {
-        if (items.get(position) instanceof Medication) {
-            return VIEW_TYPE_MEDICATION;
-        } else {
-            return VIEW_TYPE_EDUCATIONAL;
-        }
+        return VIEW_TYPE_MEDICATION;
     }
     
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        
-        if (viewType == VIEW_TYPE_MEDICATION) {
-            View view = inflater.inflate(R.layout.item_medication, parent, false);
-            return new MedicationViewHolder(view);
-        } else {
-            View view = inflater.inflate(R.layout.item_educational_reminder, parent, false);
-            return new EducationalViewHolder(view);
-        }
+//
+//        if (viewType == VIEW_TYPE_MEDICATION) {
+//            View view = inflater.inflate(R.layout.item_medication, parent, false);
+//            return new MedicationViewHolder(view);
+//        }
+        View view = inflater.inflate(R.layout.item_medication, parent, false);
+        return new MedicationViewHolder(view);
     }
     
     @Override
@@ -214,25 +199,6 @@ public class CombinedReminderAdapter extends RecyclerView.Adapter<RecyclerView.V
                 takeDoseButton.setText("Uống");
                 takeDoseButton.setOnClickListener(null);
             }
-        } else {
-            EducationalReminder reminder = (EducationalReminder) items.get(position);
-            EducationalViewHolder viewHolder = (EducationalViewHolder) holder;
-            
-            viewHolder.titleText.setText(reminder.getTitle());
-            viewHolder.typeText.setText(reminder.getTypeLabel());
-            
-            // Format date and time
-            if (reminder.getReminderDate() != null) {
-                java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("MMM dd, yyyy", java.util.Locale.getDefault());
-                viewHolder.dateText.setText(dateFormat.format(reminder.getReminderDate()));
-            }
-            
-            viewHolder.timeText.setText(reminder.getReminderTime());
-            
-            // Set up click listener
-            viewHolder.itemView.setOnClickListener(v -> {
-                educationalClickListener.accept(reminder);
-            });
         }
     }
     
@@ -241,17 +207,12 @@ public class CombinedReminderAdapter extends RecyclerView.Adapter<RecyclerView.V
         return items.size();
     }
     
-    public void updateItems(List<Medication> medications, List<EducationalReminder> educationalReminders) {
+    public void updateItems(List<Medication> medications) {
         items.clear();
         
         if (medications != null) {
             items.addAll(medications);
         }
-        
-        if (educationalReminders != null) {
-            items.addAll(educationalReminders);
-        }
-        
         notifyDataSetChanged();
     }
     
@@ -282,21 +243,6 @@ public class CombinedReminderAdapter extends RecyclerView.Adapter<RecyclerView.V
             return nowDate.compareTo(doseDate) >= 0;
         } catch (Exception e) {
             return false;
-        }
-    }
-    
-    static class EducationalViewHolder extends RecyclerView.ViewHolder {
-        TextView titleText;
-        TextView typeText;
-        TextView dateText;
-        TextView timeText;
-        
-        public EducationalViewHolder(@NonNull View itemView) {
-            super(itemView);
-            titleText = itemView.findViewById(R.id.reminderTitle);
-            typeText = itemView.findViewById(R.id.reminderType);
-            dateText = itemView.findViewById(R.id.reminderDate);
-            timeText = itemView.findViewById(R.id.reminderTime);
         }
     }
 }

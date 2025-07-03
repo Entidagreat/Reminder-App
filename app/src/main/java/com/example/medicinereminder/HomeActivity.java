@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.medicinereminder.adapters.CombinedReminderAdapter;
 import com.example.medicinereminder.adapters.MedicationAdapter;
 import com.example.medicinereminder.models.DoseHistory;
-import com.example.medicinereminder.models.EducationalReminder;
 import com.example.medicinereminder.models.Medication;
 import com.example.medicinereminder.utils.DatabaseHelper;
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ public class HomeActivity extends AppCompatActivity {
     private CardView calendarCard;
     private CardView historyCard;
     private CardView refillCard;
-    private CardView educationalReminderCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +86,7 @@ public class HomeActivity extends AppCompatActivity {
         calendarCard = findViewById(R.id.calendarCard);
         historyCard = findViewById(R.id.historyCard);
         refillCard = findViewById(R.id.refillCard);
-        educationalReminderCard = findViewById(R.id.educationalReminderCard);
-
+        
         // Setup RecyclerView
         todaysScheduleRecycler.setLayoutManager(new LinearLayoutManager(this));
         medicationAdapter = new MedicationAdapter(new ArrayList<>(), this::onMedicationClick);
@@ -98,7 +95,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         addMedicationCard.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, AddReminderSelectionActivity.class);
+            Intent intent = new Intent(HomeActivity.this, AddMedicationActivity.class);
             startActivity(intent);
         });
 
@@ -114,11 +111,6 @@ public class HomeActivity extends AppCompatActivity {
 
         refillCard.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, RefillActivity.class);
-            startActivity(intent);
-        });
-
-        educationalReminderCard.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, EducationalReminderActivity.class);
             startActivity(intent);
         });
 
@@ -148,17 +140,12 @@ public class HomeActivity extends AppCompatActivity {
         // Get today's medications
         List<Medication> todaysMedications = dbHelper.getTodaysMedications();
 
-        // Get today's educational reminders
-        List<EducationalReminder> todaysEducationalReminders = dbHelper.getTodaysEducationalReminders();
-
-        // For future: Add other types of reminders here
-
         // Show appropriate UI if there are no reminders
-        if (todaysMedications.isEmpty() && todaysEducationalReminders.isEmpty()) {
+        if (todaysMedications.isEmpty()) {
             showNoReminders();
         } else {
             // Show medications and reminders
-            showScheduledItems(todaysMedications, todaysEducationalReminders);
+            showScheduledItems(todaysMedications);
             updateDailyProgress(todaysMedications);
         }
     }
@@ -171,7 +158,7 @@ public class HomeActivity extends AppCompatActivity {
         dailyProgressBar.setProgress(0);
     }
 
-    private void showScheduledItems(List<Medication> medications, List<EducationalReminder> educationalReminders) {
+    private void showScheduledItems(List<Medication> medications) {
         todaysScheduleRecycler.setVisibility(View.VISIBLE);
         noMedicationsText.setVisibility(View.GONE);
         seeAllButton.setVisibility(View.VISIBLE);
@@ -180,10 +167,8 @@ public class HomeActivity extends AppCompatActivity {
         // Truyền callback rỗng để tránh double ghi nhận lịch sử khi bấm "Uống"
         CombinedReminderAdapter adapter = new CombinedReminderAdapter(
                 medications,
-                educationalReminders,
                 m -> {}, // callback rỗng, không làm gì
-                () -> updateDailyProgress(medications), // callback cập nhật tiến độ ngay khi uống
-                reminder -> onEducationalReminderClick(reminder)
+                () -> updateDailyProgress(medications)// callback cập nhật tiến độ ngay khi uống
         );
 
         todaysScheduleRecycler.setAdapter(adapter);
@@ -246,13 +231,6 @@ public class HomeActivity extends AppCompatActivity {
 
         // Refresh the display
         loadData();
-    }
-
-    // Add method to handle educational reminder click
-    private void onEducationalReminderClick(EducationalReminder reminder) {
-        Intent intent = new Intent(HomeActivity.this, EducationalReminderActivity.class);
-        intent.putExtra("reminder_id", reminder.getId());
-        startActivity(intent);
     }
 
     private String getGreeting() {

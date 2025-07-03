@@ -58,25 +58,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
                 holder.statusIndicator.setBackgroundColor(Color.GRAY);
             }
             // Đã loại bỏ nút hành động, không còn thao tác với takeButton/missButton
-        } else if ("educational".equals(item.type)) {
-            // Handle educational reminder
-            holder.medicationName.setText(item.educationalReminder.getTitle());
-            holder.dosageText.setText(item.educationalReminder.getTypeLabel());
-            holder.timeText.setText(item.educationalReminder.getReminderTime());
-
-            // Set up status UI based on completion status
-            if (item.educationalReminder.isCompleted()) {
-                holder.statusText.setText(R.string.completed);
-                holder.statusText.setVisibility(View.VISIBLE);
-                holder.statusText.setTextColor(Color.parseColor("#4CAF50")); // green
-                holder.statusIndicator.setBackgroundColor(Color.parseColor("#4CAF50"));
-            } else {
-                holder.statusText.setText(R.string.pending);
-                holder.statusText.setVisibility(View.VISIBLE);
-                holder.statusText.setTextColor(Color.parseColor("#FF9800")); // orange
-                holder.statusIndicator.setBackgroundColor(Color.parseColor("#FF9800"));
-            }
-            // Đã loại bỏ nút hành động, không còn thao tác với takeButton/missButton
         }
     }
 
