@@ -1,9 +1,14 @@
 package com.example.medicinereminder;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -15,6 +20,7 @@ import com.example.medicinereminder.adapters.CombinedReminderAdapter;
 import com.example.medicinereminder.adapters.MedicationAdapter;
 import com.example.medicinereminder.models.DoseHistory;
 import com.example.medicinereminder.models.Medication;
+import com.example.medicinereminder.services.MissedDoseService;
 import com.example.medicinereminder.utils.DatabaseHelper;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,6 +46,11 @@ public class HomeActivity extends AppCompatActivity {
     private CardView historyCard;
     private CardView refillCard;
 
+    private TextView notificationBadge;
+    private ImageView notificationIcon;
+
+    private BroadcastReceiver notificationReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +60,45 @@ public class HomeActivity extends AppCompatActivity {
         initViews();
         setupClickListeners();
         setupAutoRefresh(); // Setup timer for auto refresh
+        setupNotificationReceiver();
         loadData();
+
+        // Start missed dose service
+        Intent serviceIntent = new Intent(this, MissedDoseService.class);
+        startService(serviceIntent);
+    }
+
+    private void setupNotificationReceiver() {
+        notificationReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if ("com.example.medicinereminder.NOTIFICATION_ADDED".equals(intent.getAction())) {
+                    updateNotificationBadge();
+                }
+            }
+        };
+        
+        IntentFilter filter = new IntentFilter("com.example.medicinereminder.NOTIFICATION_ADDED");
+        // Kiểm tra API level và thêm flag phù hợp
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13+ cần flag RECEIVER_NOT_EXPORTED vì đây là broadcast nội bộ
+            registerReceiver(notificationReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        }
+    }
+
+    private void openNotificationCenter() {
+        Intent intent = new Intent(this, NotificationCenterActivity.class);
+        startActivity(intent);
+    }
+
+    private void updateNotificationBadge() {
+        int unreadCount = dbHelper.getUnreadNotificationCount();
+        if (unreadCount > 0) {
+            notificationBadge.setVisibility(View.VISIBLE);
+            notificationBadge.setText(String.valueOf(unreadCount));
+        } else {
+            notificationBadge.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -58,6 +107,7 @@ public class HomeActivity extends AppCompatActivity {
         loadData(); // Refresh data when returning to home
         // Start auto refresh when activity is resumed
         autoRefreshHandler.postDelayed(autoRefreshRunnable, AUTO_REFRESH_INTERVAL);
+        updateNotificationBadge();
     }
     
     @Override
@@ -74,6 +124,10 @@ public class HomeActivity extends AppCompatActivity {
             autoRefreshHandler.removeCallbacks(autoRefreshRunnable);
         }
         super.onDestroy();
+        
+        if (notificationReceiver != null) {
+            unregisterReceiver(notificationReceiver);
+        }
     }
 
     private void initViews() {
@@ -91,6 +145,9 @@ public class HomeActivity extends AppCompatActivity {
         todaysScheduleRecycler.setLayoutManager(new LinearLayoutManager(this));
         medicationAdapter = new MedicationAdapter(new ArrayList<>(), this::onMedicationClick);
         todaysScheduleRecycler.setAdapter(medicationAdapter);
+
+        notificationIcon = findViewById(R.id.notificationIcon);
+        notificationBadge = findViewById(R.id.notificationBadge);
     }
 
     private void setupClickListeners() {
@@ -118,6 +175,7 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, CalendarActivity.class);
             startActivity(intent);
         });
+        notificationIcon.setOnClickListener(v -> openNotificationCenter());
     }
 
     // Setup auto refresh timer

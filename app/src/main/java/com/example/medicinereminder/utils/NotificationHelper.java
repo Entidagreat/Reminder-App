@@ -96,4 +96,32 @@ public class NotificationHelper {
     public void cancelAllNotifications() {
         notificationManager.cancelAll();
     }
+
+    public void showMissedDoseReminder(String medicationName, String dosage, String scheduledTime, int retryCount) {
+        String title = retryCount == 1 ? "Missed Dose Reminder" : "Final Dose Reminder";
+        String message = (retryCount == 1 ? "You missed taking " : "Final reminder: ") + 
+                        medicationName + " (" + dosage + ") at " + scheduledTime;
+        
+        Intent intent = new Intent(context, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_warning)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+
+        notificationManager.notify(NOTIFICATION_ID + 2000 + retryCount, builder.build());
+    }
 }

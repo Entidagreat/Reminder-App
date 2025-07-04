@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.example.medicinereminder.models.Medication;
 import com.example.medicinereminder.models.DoseHistory;
+import com.example.medicinereminder.models.NotificationItem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -87,6 +88,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL(CREATE_MEDICATIONS_TABLE);
         db.execSQL(CREATE_DOSE_HISTORY_TABLE);
+        db.execSQL(CREATE_NOTIFICATIONS_TABLE);
     }
 
     @Override
@@ -367,5 +369,87 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             
         db.close();
         return result;
+    }
+        private static final String CREATE_NOTIFICATIONS_TABLE = 
+            "CREATE TABLE notifications (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "title TEXT NOT NULL, " +
+            "message TEXT NOT NULL, " +
+            "type TEXT NOT NULL, " +
+            "medication_id INTEGER, " +
+            "scheduled_time TEXT, " +
+            "created_at INTEGER, " +
+            "is_read INTEGER DEFAULT 0, " +
+            "retry_count INTEGER DEFAULT 0)";
+
+    public long addNotification(NotificationItem notification) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("title", notification.getTitle());
+        values.put("message", notification.getMessage());
+        values.put("type", notification.getType());
+        values.put("medication_id", notification.getMedicationId());
+        values.put("scheduled_time", notification.getScheduledTime());
+        values.put("created_at", notification.getCreatedAt().getTime());
+        values.put("is_read", notification.isRead() ? 1 : 0);
+        values.put("retry_count", notification.getRetryCount());
+        
+        long id = db.insert("notifications", null, values);
+        db.close();
+        return id;
+    }
+
+    public List<NotificationItem> getAllNotifications() {
+        List<NotificationItem> notifications = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        
+        Cursor cursor = db.rawQuery("SELECT * FROM notifications ORDER BY created_at DESC", null);
+        
+        if (cursor.moveToFirst()) {
+            do {
+                NotificationItem notification = new NotificationItem();
+                notification.setId(cursor.getLong(cursor.getColumnIndex("id")));
+                notification.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+                notification.setMessage(cursor.getString(cursor.getColumnIndex("message")));
+                notification.setType(cursor.getString(cursor.getColumnIndex("type")));
+                notification.setMedicationId(cursor.getInt(cursor.getColumnIndex("medication_id")));
+                notification.setScheduledTime(cursor.getString(cursor.getColumnIndex("scheduled_time")));
+                notification.setCreatedAt(new Date(cursor.getLong(cursor.getColumnIndex("created_at"))));
+                notification.setRead(cursor.getInt(cursor.getColumnIndex("is_read")) == 1);
+                notification.setRetryCount(cursor.getInt(cursor.getColumnIndex("retry_count")));
+                
+                notifications.add(notification);
+            } while (cursor.moveToNext());
+        }
+        
+        cursor.close();
+        db.close();
+        return notifications;
+    }
+
+    public void markNotificationAsRead(long notificationId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("is_read", 1);
+        db.update("notifications", values, "id = ?", new String[]{String.valueOf(notificationId)});
+        db.close();
+    }
+
+    public void clearAllNotifications() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("notifications", null, null);
+        db.close();
+    }
+
+    public int getUnreadNotificationCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM notifications WHERE is_read = 0", null);
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        db.close();
+        return count;
     }
 }
