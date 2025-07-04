@@ -145,6 +145,7 @@ public class Medication {
 
     public boolean isReminderEnabled() { return reminderEnabled; }
     public void setReminderEnabled(boolean reminderEnabled) { this.reminderEnabled = reminderEnabled; }
+    public boolean getReminderEnabled() {return reminderEnabled;}
 
     public boolean isRefillTrackingEnabled() { return refillTrackingEnabled; }
     public void setRefillTrackingEnabled(boolean refillTrackingEnabled) { this.refillTrackingEnabled = refillTrackingEnabled; }

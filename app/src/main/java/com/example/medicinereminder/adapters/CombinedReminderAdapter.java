@@ -1,5 +1,8 @@
 package com.example.medicinereminder.adapters;
 
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.medicinereminder.MedicationDetailActivity;
 import com.example.medicinereminder.R;
 import com.example.medicinereminder.models.Medication;
 
@@ -89,6 +93,24 @@ public class CombinedReminderAdapter extends RecyclerView.Adapter<RecyclerView.V
             MedicationViewHolder viewHolder = (MedicationViewHolder) holder;
             viewHolder.titleText.setText(medication.getName());
             viewHolder.subtitleText.setText(medication.getDosage());
+            viewHolder.itemView.setOnClickListener(v -> {
+                Context context = viewHolder.itemView.getContext();
+                Intent intent = new Intent(context, MedicationDetailActivity.class);
+                intent.putExtra("medicationId", medication.getId());
+//                intent.putExtra("name", medication.getName());
+//                intent.putExtra("dosage", medication.getDosage());
+//                intent.putExtra("frequency", medication.getFrequency());
+//                intent.putExtra("duration", medication.getDuration());
+//                intent.putExtra("start_date", medication.getStartDate().getTime());
+//                intent.putExtra("end_date", medication.getEndDate() != null ? medication.getEndDate().getTime() : -1);
+//                intent.putExtra("is_reminder", medication.getReminderEnabled());
+//                intent.putStringArrayListExtra("reminderTimes", new ArrayList<>(medication.getReminderTimes()));
+//                Log.d("MedicationCombine", "ID = " + medication.getId() + ", Name = " + medication.getName()
+//                        + ", Dosage = " + medication.getName() + ", Frequency = " + medication.getFrequency()
+//                        + ", Duration = " + medication.getDuration() + ", startDate = " + medication.getStartDate()
+//                        + ", endDate = " + medication.getEndDate() + ", is_reminder = " + medication.getReminderEnabled());
+                context.startActivity(intent);
+            });
             // Xóa dòng này vì dosesLayout không còn tồn tại, đã thay bằng dosesRowLayout phía dưới
             List<String> reminderTimes = medication.getReminderTimes();
             // Hiển thị 1 hàng ngang các khung giờ và 1 nút "Uống" duy nhất

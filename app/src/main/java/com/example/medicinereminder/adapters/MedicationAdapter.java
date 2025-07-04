@@ -1,5 +1,6 @@
 package com.example.medicinereminder.adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,12 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.medicinereminder.MedicationDetailActivity;
 import com.example.medicinereminder.R;
 import com.example.medicinereminder.models.Medication;
+
+import java.util.ArrayList;
 import java.util.List;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -87,6 +92,14 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
 
         public void bind(Medication medication) {
             medicationName.setText(medication.getName());
+            itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(itemView.getContext(), MedicationDetailActivity.class);
+                intent.putExtra("name", medication.getName());
+                intent.putExtra("dosage", medication.getDosage());
+                intent.putStringArrayListExtra("reminderTimes", new ArrayList<>(medication.getReminderTimes()));
+                itemView.getContext().startActivity(intent);
+            });
+
             dosageText.setText(medication.getDosage());
             dosesRowLayout.removeAllViews();
             List<String> reminderTimes = medication.getReminderTimes();
