@@ -34,7 +34,7 @@ public class HomeActivity extends AppCompatActivity {
     // Timer for auto refresh
     private Handler autoRefreshHandler;
     private Runnable autoRefreshRunnable;
-    private static final int AUTO_REFRESH_INTERVAL = 60000; // 60 seconds
+    private static final int AUTO_REFRESH_INTERVAL = 5000; // 5 seconds
 
     private TextView progressText;
     private ProgressBar dailyProgressBar;
@@ -291,16 +291,16 @@ public class HomeActivity extends AppCompatActivity {
         loadData();
     }
 
-    private String getGreeting() {
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+    // private String getGreeting() {
+    //     Calendar calendar = Calendar.getInstance();
+    //     int hour = calendar.get(Calendar.HOUR_OF_DAY);
 
-        if (hour < 12) {
-            return "Good Morning";
-        } else if (hour < 17) {
-            return "Good Afternoon";
-        } else {
-            return "Good Evening";
-        }
-    }
+    //     if (hour < 12) {
+    //         return "Good Morning";
+    //     } else if (hour < 17) {
+    //         return "Good Afternoon";
+    //     } else {
+    //         return "Good Evening";
+    //     }
+    // }
 }
