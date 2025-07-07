@@ -22,6 +22,8 @@ import com.example.medicinereminder.models.DoseHistory;
 import com.example.medicinereminder.models.Medication;
 import com.example.medicinereminder.services.MissedDoseService;
 import com.example.medicinereminder.utils.DatabaseHelper;
+import com.example.medicinereminder.utils.LocaleHelper;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,12 +46,16 @@ public class HomeActivity extends AppCompatActivity {
     private CardView addMedicationCard;
     private CardView calendarCard;
     private CardView historyCard;
-    private CardView refillCard;
 
-    private TextView notificationBadge;
+    private View notificationDot;
     private ImageView notificationIcon;
 
     private BroadcastReceiver notificationReceiver;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.setLocale(newBase, "vi"));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +69,8 @@ public class HomeActivity extends AppCompatActivity {
         setupNotificationReceiver();
         loadData();
 
+        notificationDot = findViewById(R.id.notificationDot);
+
         // Start missed dose service
         Intent serviceIntent = new Intent(this, MissedDoseService.class);
         startService(serviceIntent);
@@ -73,7 +81,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if ("com.example.medicinereminder.NOTIFICATION_ADDED".equals(intent.getAction())) {
-                    updateNotificationBadge();
+                    // Cập nhật ngay lập tức trên UI thread
+                    runOnUiThread(() -> updateNotificationBadge());
                 }
             }
         };
@@ -83,6 +92,9 @@ public class HomeActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             // Android 13+ cần flag RECEIVER_NOT_EXPORTED vì đây là broadcast nội bộ
             registerReceiver(notificationReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        }
+        else {
+            registerReceiver(notificationReceiver, filter);
         }
     }
 
@@ -94,10 +106,9 @@ public class HomeActivity extends AppCompatActivity {
     private void updateNotificationBadge() {
         int unreadCount = dbHelper.getUnreadNotificationCount();
         if (unreadCount > 0) {
-            notificationBadge.setVisibility(View.VISIBLE);
-            notificationBadge.setText(String.valueOf(unreadCount));
+            notificationDot.setVisibility(View.VISIBLE); // Hiện chấm đỏ
         } else {
-            notificationBadge.setVisibility(View.GONE);
+            notificationDot.setVisibility(View.GONE); // Ẩn chấm đỏ
         }
     }
 
@@ -139,7 +150,6 @@ public class HomeActivity extends AppCompatActivity {
         addMedicationCard = findViewById(R.id.addMedicationCard);
         calendarCard = findViewById(R.id.calendarCard);
         historyCard = findViewById(R.id.historyCard);
-        refillCard = findViewById(R.id.refillCard);
         
         // Setup RecyclerView
         todaysScheduleRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -147,7 +157,6 @@ public class HomeActivity extends AppCompatActivity {
         todaysScheduleRecycler.setAdapter(medicationAdapter);
 
         notificationIcon = findViewById(R.id.notificationIcon);
-        notificationBadge = findViewById(R.id.notificationBadge);
     }
 
     private void setupClickListeners() {
@@ -163,11 +172,6 @@ public class HomeActivity extends AppCompatActivity {
 
         historyCard.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, HistoryActivity.class);
-            startActivity(intent);
-        });
-
-        refillCard.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, RefillActivity.class);
             startActivity(intent);
         });
 
@@ -290,17 +294,4 @@ public class HomeActivity extends AppCompatActivity {
         // Refresh the display
         loadData();
     }
-
-    // private String getGreeting() {
-    //     Calendar calendar = Calendar.getInstance();
-    //     int hour = calendar.get(Calendar.HOUR_OF_DAY);
-
-    //     if (hour < 12) {
-    //         return "Good Morning";
-    //     } else if (hour < 17) {
-    //         return "Good Afternoon";
-    //     } else {
-    //         return "Good Evening";
-    //     }
-    // }
 }

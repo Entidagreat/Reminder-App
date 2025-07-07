@@ -1,5 +1,6 @@
 package com.example.medicinereminder;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -58,10 +59,18 @@ public class NotificationCenterActivity extends AppCompatActivity {
         // Mark as read
         dbHelper.markNotificationAsRead(notification.getId());
         loadNotifications();
+
+        // Gửi broadcast để cập nhật chấm đỏ
+        Intent broadcastIntent = new Intent("com.example.medicinereminder.NOTIFICATION_ADDED");
+        sendBroadcast(broadcastIntent);
     }
 
     private void clearAllNotifications() {
         dbHelper.clearAllNotifications();
         loadNotifications();
+
+        // Gửi broadcast để cập nhật chấm đỏ
+        Intent broadcastIntent = new Intent("com.example.medicinereminder.NOTIFICATION_ADDED");
+        sendBroadcast(broadcastIntent);
     }
 }

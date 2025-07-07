@@ -1,6 +1,7 @@
 package com.example.medicinereminder;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.widget.CalendarView;
 import android.widget.TextView;
@@ -11,6 +12,8 @@ import com.example.medicinereminder.adapters.CalendarAdapter;
 import com.example.medicinereminder.models.DoseHistory;
 import com.example.medicinereminder.models.Medication;
 import com.example.medicinereminder.utils.DatabaseHelper;
+import com.example.medicinereminder.utils.LocaleHelper;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,6 +36,11 @@ public class CalendarActivity extends AppCompatActivity {
     private SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.setLocale(newBase, "vi"));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
@@ -43,6 +51,33 @@ public class CalendarActivity extends AppCompatActivity {
         initViews();
         setupCalendar();
         loadMedicationsForDate(selectedDate);
+
+        // Thiết lập định dạng ngày tháng tiếng Việt
+        setupCalendarWithVietnameseLocale();
+    }
+
+        private void setupCalendarWithVietnameseLocale() {
+        CalendarView calendarView = findViewById(R.id.calendarView);
+        
+        TextView selectedDateText = findViewById(R.id.selectedDateText);
+        
+        // Thiết lập ngày hiện tại bằng tiếng Việt
+        Calendar currentDate = Calendar.getInstance();
+        SimpleDateFormat vietnameseFormat = new SimpleDateFormat("EEEE, dd/MM/yyyy", new Locale("vi", "VN"));
+        String formattedCurrentDate = vietnameseFormat.format(currentDate.getTime());
+        selectedDateText.setText(formattedCurrentDate);
+
+        // Thiết lập listener để hiển thị ngày bằng tiếng Việt
+        calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            Calendar selectedDate = Calendar.getInstance();
+            selectedDate.set(year, month, dayOfMonth);
+            
+            // Định dạng ngày tháng bằng tiếng Việt
+            String formattedDate = vietnameseFormat.format(selectedDate.getTime());
+            selectedDateText.setText(formattedDate);
+            this.selectedDate = selectedDate.getTime();
+            loadMedicationsForDate(selectedDate.getTime());
+        });
     }
 
     private void initViews() {

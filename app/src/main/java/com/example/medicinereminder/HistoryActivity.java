@@ -2,6 +2,7 @@ package com.example.medicinereminder;
 
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.medicinereminder.adapters.HistoryAdapter;
 import com.example.medicinereminder.models.DoseHistory;
 import com.example.medicinereminder.utils.DatabaseHelper;
+import com.example.medicinereminder.utils.LocaleHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +35,11 @@ public class HistoryActivity extends AppCompatActivity {
 
     private String currentFilter = "all"; // "all", "taken", "missed"
     private List<DoseHistory> allHistory = new ArrayList<>();
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.setLocale(newBase, "vi"));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,13 +160,13 @@ public class HistoryActivity extends AppCompatActivity {
 
     private void showClearAllDialog() {
         new AlertDialog.Builder(this)
-                .setTitle("Clear All Data")
-                .setMessage("Are you sure you want to clear all medication history? This action cannot be undone.")
-                .setPositiveButton("Clear All", (dialog, which) -> {
+                .setTitle("Xóa tất cả dữ liệu")
+                .setMessage("Bạn có chắc chắn xóa mọi dữ liệu về lịch sử uống thuốc? Hành động này không thể hoàn tác.")
+                .setPositiveButton("Xóa tất cả", (dialog, which) -> {
                     dbHelper.clearAllData();
                     loadHistory();
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("Hủy", null)
                 .show();
     }
 }

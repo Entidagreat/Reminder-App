@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Primary Colors -->
-    <color name="primary_green">#4CAF50</color>
-    <color name="primary_green_dark">#388E3C</color>
-    <color name="primary_green_light">#C8E6C9</color>
+    <!-- Primary Colors - Soft Mint Theme -->
+    <color name="primary_green">#06B6D4</color>
+    <color name="primary_green_dark">#0891B2</color>
+    <color name="primary_green_light">#E0F7FA</color>
 
     <!-- Material Design Colors -->
-    <color name="colorPrimary">#4CAF50</color>
-    <color name="colorPrimaryDark">#388E3C</color>
-    <color name="colorAccent">#4CAF50</color>
+    <color name="colorPrimary">#06B6D4</color>
+    <color name="colorPrimaryDark">#0891B2</color>
+    <color name="colorAccent">#10B981</color>
 
     <!-- Background Colors -->
-    <color name="background_light">#F5F5F5</color>
+    <color name="background_light">#F9FAFB</color>
     <color name="white">#FFFFFF</color>
     <color name="card_background">#FFFFFF</color>
 
     <!-- Text Colors -->
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
+    <color name="text_primary">#1F2937</color>
+    <color name="text_secondary">#6B7280</color>
 
     <!-- Status Colors -->
-    <color name="status_taken">#4CAF50</color>
-    <color name="status_missed">#F44336</color>
-    <color name="status_skipped">#FF9800</color>
+    <color name="status_taken">#10B981</color>
+    <color name="status_missed">#EF4444</color>
+    <color name="status_skipped">#F59E0B</color>
 
-    <!-- Button Colors -->
-    <color name="button_background">#E0E0E0</color>
+    <!-- Additional Colors -->
+    <color name="button_background">#E0F7FA</color>
+    <color name="border_light">#E5E7EB</color>
+    <color name="priority_high">#EF4444</color>
+    <color name="priority_medium">#F59E0B</color>
+    <color name="priority_low">#10B981</color>
+    <color name="danger">#DC2626</color>
 </resources>

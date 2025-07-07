@@ -119,13 +119,11 @@ public class MedicationDetailActivity extends AppCompatActivity {
         twiceCard = findViewById(R.id.twiceCard);
         threeTimesCard = findViewById(R.id.threeTimesCard);
         fourTimesCard = findViewById(R.id.fourTimesCard);
-        asNeededCard = findViewById(R.id.asNeededCard);
 
         onceText = findViewById(R.id.onceText);
         twiceText = findViewById(R.id.twiceText);
         threeTimesText = findViewById(R.id.threeTimesText);
         fourTimesText = findViewById(R.id.fourTimesText);
-        asNeededText = findViewById(R.id.asNeededText);
 
         // Duration cards
         days7Card = findViewById(R.id.days7Card);
@@ -150,8 +148,6 @@ public class MedicationDetailActivity extends AppCompatActivity {
         deleteBtn = findViewById(R.id.deleteMedicineButton);
         updateBtn = findViewById(R.id.updateMedicineButton);
         backBtn = findViewById(R.id.backButton);
-
-        reminderSwitch = findViewById(R.id.reminderSwitch);
     }
 
     private void setUpListener(){

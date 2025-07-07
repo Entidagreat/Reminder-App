@@ -4,6 +4,7 @@ package com.example.medicinereminder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.medicinereminder.utils.SharedPreferencesHelper;
@@ -11,12 +12,13 @@ import com.example.medicinereminder.utils.SharedPreferencesHelper;
 public class SplashActivity extends AppCompatActivity {
     private static final int SPLASH_DELAY = 2000; // 2 seconds
     private SharedPreferencesHelper prefsHelper;
+    ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        deleteDatabase("MedicineReminder.db");
+//        deleteDatabase("MedicineReminder.db");
 
         prefsHelper = new SharedPreferencesHelper(this);
 
@@ -33,6 +35,8 @@ public class SplashActivity extends AppCompatActivity {
                 navigateToNextScreen();
             }
         }, SPLASH_DELAY);
+        imageView = findViewById(R.id.appimg);
+        imageView.setImageResource(R.drawable.medicinelogo);
     }
 
     private void navigateToNextScreen() {
@@ -42,9 +46,6 @@ public class SplashActivity extends AppCompatActivity {
             // First time launching the app
             prefsHelper.setFirstLaunch(false);
             intent = new Intent(SplashActivity.this, HomeActivity.class);
-        } else if (prefsHelper.isAuthEnabled()) {
-            // Authentication is enabled
-            intent = new Intent(SplashActivity.this, AuthActivity.class);
         } else {
             // Go directly to home
             intent = new Intent(SplashActivity.this, HomeActivity.class);

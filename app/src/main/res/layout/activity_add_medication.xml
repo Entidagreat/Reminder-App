@@ -19,14 +19,14 @@
 
             <ImageView
                 android:id="@+id/backButton"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_arrow_back"
-                android:clickable="true"
-                android:focusable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/back"
+                android:focusable="true"
                 android:padding="4dp"
-                android:contentDescription="@string/back" />
+                android:src="@drawable/ic_arrow_back" />
 
             <TextView
                 android:layout_width="0dp"
@@ -164,14 +164,6 @@
 
             </androidx.cardview.widget.CardView>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="24dp">
-
             <androidx.cardview.widget.CardView
                 android:id="@+id/fourTimesCard"
                 android:layout_width="0dp"
@@ -193,34 +185,6 @@
                     android:textColor="@color/text_primary" />
 
             </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/asNeededCard"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_weight="1"
-                android:layout_margin="4dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                style="@style/CardStyle">
-
-                <TextView
-                    android:id="@+id/asNeededText"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/as_needed"
-                    android:gravity="center"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_primary" />
-
-            </androidx.cardview.widget.CardView>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
         </LinearLayout>
 
         <!-- Time Slot Selection (for once/twice per day) -->
@@ -352,14 +316,6 @@
 
             </androidx.cardview.widget.CardView>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="24dp">
-
             <androidx.cardview.widget.CardView
                 android:id="@+id/days90Card"
                 android:layout_width="0dp"
@@ -404,14 +360,18 @@
 
             </androidx.cardview.widget.CardView>
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="2" />
-
         </LinearLayout>
 
         <!-- Start Date -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_date_label"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="12dp" />
+
         <TextView
             android:id="@+id/startDateText"
             android:layout_width="match_parent"
@@ -422,165 +382,11 @@
             android:focusable="true"
             android:gravity="center_vertical"
             android:padding="16dp"
-            android:text="Starts today"
+            android:text="Bắt đầu từ hôm nay"
             android:textColor="@color/text_primary"
             android:textSize="16sp"
             android:drawableEnd="@drawable/ic_calendar"
             android:drawablePadding="8dp" />
-
-        <!-- Reminders Section -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/CardStyle"
-            android:layout_marginBottom="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/reminders"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/reminder_description"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary" />
-
-                </LinearLayout>
-
-                <Switch
-                    android:id="@+id/reminderSwitch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- Refill Tracking Section -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/CardStyle"
-            android:layout_marginBottom="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/refill_tracking"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_primary" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/refill_description"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_secondary" />
-
-                    </LinearLayout>
-
-                    <Switch
-                        android:id="@+id/refillSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
-
-                <!-- Refill Details (Initially Hidden) -->
-                <LinearLayout
-                    android:id="@+id/refillLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="16dp"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/current_supply"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="8dp" />
-
-                    <EditText
-                        android:id="@+id/currentSupplyEdit"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginBottom="16dp"
-                        android:background="@drawable/edit_text_background"
-                        android:hint="Number of pills/doses"
-                        android:inputType="number"
-                        android:padding="12dp"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/alert_at"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="8dp" />
-
-                    <SeekBar
-                        android:id="@+id/refillThresholdSeeker"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:max="50"
-                        android:progress="20" />
-
-                    <TextView
-                        android:id="@+id/refillThresholdText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="20%"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_gravity="center" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
 
         <!-- Add Button -->
         <Button

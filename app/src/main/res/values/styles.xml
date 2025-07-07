@@ -62,4 +62,11 @@
         <item name="colorSecondary">@color/primary_green</item>
         <item name="colorOnSurface">@color/text_secondary</item>
     </style>
+
+    <style name="CustomCalendarTheme" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:colorControlActivated">@color/colorPrimary</item>
+        <item name="android:colorControlHighlight">@color/primary_green_light</item>
+        <item name="android:selectableItemBackground">@color/primary_green_light</item>
+    </style>
 </resources>

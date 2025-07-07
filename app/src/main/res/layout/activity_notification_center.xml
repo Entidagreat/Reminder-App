@@ -9,40 +9,40 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/background_light"
         android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="@color/primary_green">
+        android:padding="16dp">
 
         <ImageView
             android:id="@+id/backButton"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_back"
             android:layout_gravity="center_vertical"
+            android:layout_marginEnd="16dp"
             android:contentDescription="Back"
-            android:layout_marginEnd="16dp" />
+            android:src="@drawable/ic_back" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:text="Notifications"
+            android:text="Thông báo"
+            android:textColor="@color/text_primary"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:layout_gravity="center_vertical" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/clearAllButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Clear All"
-            android:textColor="@color/white"
             android:layout_gravity="center_vertical"
+            android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackground"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:text="Xóa tất cả"
+            android:textColor="@color/text_secondary" />
 
     </LinearLayout>
 

@@ -65,6 +65,10 @@ public class NotificationHelper {
                         .bigText("It's time to take your " + medicationName + " (" + dosage + "). Don't forget to mark it as taken!"));
 
         notificationManager.notify((int) medicationId, builder.build());
+        // Gửi broadcast để cập nhật UI ngay lập tức
+        Intent broadcastIntent = new Intent("com.example.medicinereminder.NOTIFICATION_ADDED");
+        broadcastIntent.setPackage(context.getPackageName()); // Đảm bảo chỉ gửi trong app
+        context.sendBroadcast(broadcastIntent);
     }
 
     public void showRefillReminder(String medicationName, int pillsLeft) {
@@ -87,6 +91,10 @@ public class NotificationHelper {
                 .setAutoCancel(true);
 
         notificationManager.notify(NOTIFICATION_ID + 1000, builder.build());
+        // Gửi broadcast để cập nhật UI ngay lập tức
+        Intent broadcastIntent = new Intent("com.example.medicinereminder.NOTIFICATION_ADDED");
+                broadcastIntent.setPackage(context.getPackageName()); // Đảm bảo chỉ gửi trong app
+        context.sendBroadcast(broadcastIntent);
     }
 
     public void cancelNotification(int notificationId) {
@@ -98,10 +106,10 @@ public class NotificationHelper {
     }
 
     public void showMissedDoseReminder(String medicationName, String dosage, String scheduledTime, int retryCount) {
-        String title = retryCount == 1 ? "Missed Dose Reminder" : "Final Dose Reminder";
-        String message = (retryCount == 1 ? "You missed taking " : "Final reminder: ") + 
-                        medicationName + " (" + dosage + ") at " + scheduledTime;
-        
+        String title = retryCount == 1 ? "Nhắc nhở liều thuốc đã bỏ lỡ" : "Nhắc nhở liều thuốc cuối cùng";
+        String message = (retryCount == 1 ? "Bạn đã quên uống liều thuốc " : "Nhắc nhở cuối cùng: ") + 
+                        medicationName + " (" + dosage + ") vào lúc " + scheduledTime;
+
         Intent intent = new Intent(context, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         
@@ -123,5 +131,9 @@ public class NotificationHelper {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
         notificationManager.notify(NOTIFICATION_ID + 2000 + retryCount, builder.build());
+        // Gửi broadcast để cập nhật UI ngay lập tức
+        Intent broadcastIntent = new Intent("com.example.medicinereminder.NOTIFICATION_ADDED");
+        broadcastIntent.setPackage(context.getPackageName()); // Đảm bảo chỉ gửi trong app
+        context.sendBroadcast(broadcastIntent);
     }
 }

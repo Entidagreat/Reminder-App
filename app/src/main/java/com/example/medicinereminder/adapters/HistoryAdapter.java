@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.medicinereminder.R;
 import com.example.medicinereminder.models.DoseHistory;
@@ -34,7 +35,40 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     @Override
     public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
         DoseHistory history = historyList.get(position);
-        holder.bind(history);
+        
+        holder.medicationName.setText(history.getMedicationName());
+        holder.dosageText.setText(history.getDosage());
+        
+        // Định dạng ngày tháng bằng tiếng Việt
+        SimpleDateFormat vietnameseFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", new Locale("vi", "VN"));
+        String formattedDate = vietnameseFormat.format(history.getScheduledTime());
+        holder.dateText.setText(formattedDate);
+        
+        // Hiển thị trạng thái bằng tiếng Việt
+        String statusText = "";
+        int statusColor = 0;
+        
+        switch (history.getStatus()) {
+            case "taken":
+                statusText = "Đã uống";
+                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.status_taken);
+                break;
+            case "missed":
+                statusText = "Bỏ lỡ";
+                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.status_missed);
+                break;
+            case "skipped":
+                statusText = "Bỏ qua";
+                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.status_skipped);
+                break;
+            default:
+                statusText = "Chưa xác định";
+                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.text_secondary);
+                break;
+        }
+        
+        holder.statusText.setText(statusText);
+        holder.statusText.setTextColor(statusColor);
     }
 
     @Override

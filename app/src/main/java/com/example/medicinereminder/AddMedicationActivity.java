@@ -3,6 +3,7 @@ package com.example.medicinereminder;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -20,6 +21,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import com.example.medicinereminder.models.Medication;
 import com.example.medicinereminder.utils.DatabaseHelper;
+import com.example.medicinereminder.utils.DateTimeHelper;
+import com.example.medicinereminder.utils.LocaleHelper;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,11 +38,11 @@ public class AddMedicationActivity extends AppCompatActivity {
     private EditText dosageEdit;
     private TextView startDateText;
     private Switch reminderSwitch;
-    private Switch refillSwitch;
+//    private Switch refillSwitch;
     private EditText currentSupplyEdit;
-    private SeekBar refillThresholdSeeker;
-    private TextView refillThresholdText;
-    private LinearLayout refillLayout;
+//    private SeekBar refillThresholdSeeker;
+//    private TextView refillThresholdText;
+//    private LinearLayout refillLayout;
     private Button addMedicationButton;
 
     // Frequency selection
@@ -59,6 +63,11 @@ public class AddMedicationActivity extends AppCompatActivity {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.setLocale(newBase, "vi"));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_medication);
@@ -70,18 +79,18 @@ public class AddMedicationActivity extends AppCompatActivity {
         setupClickListeners();
         setupSwitches();
         updateUI();
+
+        // Hiển thị ngày bắt đầu mặc định bằng tiếng Việt
+        selectedStartDate = new Date();
+        SimpleDateFormat vietnameseFormat = new SimpleDateFormat("dd/MM/yyyy", new Locale("vi", "VN"));
+        startDateText.setText(vietnameseFormat.format(selectedStartDate));
     }
 
     private void initViews() {
         medicationNameEdit = findViewById(R.id.medicationNameEdit);
         dosageEdit = findViewById(R.id.dosageEdit);
         startDateText = findViewById(R.id.startDateText);
-        reminderSwitch = findViewById(R.id.reminderSwitch);
-        refillSwitch = findViewById(R.id.refillSwitch);
-        currentSupplyEdit = findViewById(R.id.currentSupplyEdit);
-        refillThresholdSeeker = findViewById(R.id.refillThresholdSeeker);
-        refillThresholdText = findViewById(R.id.refillThresholdText);
-        refillLayout = findViewById(R.id.refillLayout);
+//        refillThresholdText = findViewById(R.id.refillThresholdText);
         addMedicationButton = findViewById(R.id.addMedicationButton);
 
         // Frequency cards
@@ -89,13 +98,11 @@ public class AddMedicationActivity extends AppCompatActivity {
         twiceCard = findViewById(R.id.twiceCard);
         threeTimesCard = findViewById(R.id.threeTimesCard);
         fourTimesCard = findViewById(R.id.fourTimesCard);
-        asNeededCard = findViewById(R.id.asNeededCard);
 
         onceText = findViewById(R.id.onceText);
         twiceText = findViewById(R.id.twiceText);
         threeTimesText = findViewById(R.id.threeTimesText);
         fourTimesText = findViewById(R.id.fourTimesText);
-        asNeededText = findViewById(R.id.asNeededText);
 
         // Duration cards
         days7Card = findViewById(R.id.days7Card);
@@ -128,7 +135,7 @@ public class AddMedicationActivity extends AppCompatActivity {
         twiceCard.setOnClickListener(v -> selectFrequency("twice"));
         threeTimesCard.setOnClickListener(v -> selectFrequency("three_times"));
         fourTimesCard.setOnClickListener(v -> selectFrequency("four_times"));
-        asNeededCard.setOnClickListener(v -> selectFrequency("as_needed"));
+//        asNeededCard.setOnClickListener(v -> selectFrequency("as_needed"));
 
         // Duration selection
         days7Card.setOnClickListener(v -> selectDuration(7));
@@ -139,37 +146,37 @@ public class AddMedicationActivity extends AppCompatActivity {
 
         addMedicationButton.setOnClickListener(v -> addMedication());
 
-        refillThresholdSeeker.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                refillThresholdText.setText(progress + "%");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
+//        refillThresholdSeeker.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                refillThresholdText.setText(progress + "%");
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {}
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {}
+//        });
     }
 
     private void setupSwitches() {
-        reminderSwitch.setChecked(true);
-        refillSwitch.setChecked(false);
+//        reminderSwitch.setChecked(true);
+//        refillSwitch.setChecked(false);
 
-        refillSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                refillLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-            }
-        });
+//        refillSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                refillLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+//            }
+//        });
     }
 
     private void updateUI() {
         startDateText.setText(getString(R.string.starts, dateFormat.format(selectedStartDate)));
         selectFrequency(selectedFrequency);
         selectDuration(selectedDuration);
-        refillThresholdText.setText(refillThresholdSeeker.getProgress() + "%");
+//        refillThresholdText.setText(refillThresholdSeeker.getProgress() + "%");
     }
 
     private void showDatePicker() {
@@ -182,7 +189,9 @@ public class AddMedicationActivity extends AppCompatActivity {
                     Calendar selectedCalendar = Calendar.getInstance();
                     selectedCalendar.set(year, month, dayOfMonth);
                     selectedStartDate = selectedCalendar.getTime();
-                    startDateText.setText(getString(R.string.starts, dateFormat.format(selectedStartDate)));
+                    // Định dạng ngày bằng tiếng Việt
+                    SimpleDateFormat vietnameseFormat = new SimpleDateFormat("dd/MM/yyyy", new Locale("vi", "VN"));
+                    startDateText.setText(vietnameseFormat.format(selectedStartDate));
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
@@ -219,11 +228,11 @@ public class AddMedicationActivity extends AppCompatActivity {
                 fourTimesText.setTextColor(getResources().getColor(R.color.white));
                 hideTimeSlotLayout();
                 break;
-            case "as_needed":
-                asNeededCard.setCardBackgroundColor(getResources().getColor(R.color.primary_green));
-                asNeededText.setTextColor(getResources().getColor(R.color.white));
-                hideTimeSlotLayout();
-                break;
+//            case "as_needed":
+//                asNeededCard.setCardBackgroundColor(getResources().getColor(R.color.primary_green));
+//                asNeededText.setTextColor(getResources().getColor(R.color.white));
+//                hideTimeSlotLayout();
+//                break;
         }
     }
 
@@ -293,13 +302,13 @@ public class AddMedicationActivity extends AppCompatActivity {
         twiceCard.setCardBackgroundColor(defaultColor);
         threeTimesCard.setCardBackgroundColor(defaultColor);
         fourTimesCard.setCardBackgroundColor(defaultColor);
-        asNeededCard.setCardBackgroundColor(defaultColor);
+//        asNeededCard.setCardBackgroundColor(defaultColor);
 
         onceText.setTextColor(defaultTextColor);
         twiceText.setTextColor(defaultTextColor);
         threeTimesText.setTextColor(defaultTextColor);
         fourTimesText.setTextColor(defaultTextColor);
-        asNeededText.setTextColor(defaultTextColor);
+//        asNeededText.setTextColor(defaultTextColor);
     }
 
     private void resetDurationCards() {
@@ -329,25 +338,25 @@ public class AddMedicationActivity extends AppCompatActivity {
         }
 
         if (TextUtils.isEmpty(dosage)) {
-            dosageEdit.setError("Please enter dosage");
+            dosageEdit.setError("ter dosage");
             return;
         }
 
         // Create medication object
         Medication medication = new Medication(name, dosage, selectedFrequency, selectedDuration, selectedStartDate);
-        medication.setReminderEnabled(reminderSwitch.isChecked());
-        medication.setRefillTrackingEnabled(refillSwitch.isChecked());
+//        medication.setReminderEnabled(reminderSwitch.isChecked());
+//        medication.setRefillTrackingEnabled(refillSwitch.isChecked());
 
-        if (refillSwitch.isChecked()) {
-            String currentSupplyStr = currentSupplyEdit.getText().toString().trim();
-            if (!TextUtils.isEmpty(currentSupplyStr)) {
-                medication.setCurrentSupply(Integer.parseInt(currentSupplyStr));
-            }
-            medication.setRefillThreshold(refillThresholdSeeker.getProgress());
-        }
+//        if (refillSwitch.isChecked()) {
+//            String currentSupplyStr = currentSupplyEdit.getText().toString().trim();
+//            if (!TextUtils.isEmpty(currentSupplyStr)) {
+//                medication.setCurrentSupply(Integer.parseInt(currentSupplyStr));
+//            }
+//            medication.setRefillThreshold(refillThresholdSeeker.getProgress());
+//        }
 
         // Set reminder times theo lựa chọn
-        if (reminderSwitch.isChecked()) {
+//        if (reminderSwitch.isChecked()) {
             List<String> times = new ArrayList<>();
             if (selectedFrequency.equals("once")) {
                 if (timeMorning.isChecked()) times.add("08:00");
@@ -382,7 +391,7 @@ public class AddMedicationActivity extends AppCompatActivity {
                 times.add("20:00");
             }
             medication.setReminderTimes(times);
-        }
+//        }
 
         // Save to database
         addMedicationButton.setText(getString(R.string.adding));

@@ -126,8 +126,8 @@ public class MissedDoseService extends Service {
     private void handleFirstMissedDoseReminder(Medication medication, String scheduleTime) {
         // Create notification
         NotificationItem notification = new NotificationItem(
-                "Missed Dose Reminder",
-                "You missed taking " + medication.getName() + " (" + medication.getDosage() + ") at " + scheduleTime,
+                "Nhắc nhở liều thuốc đã bỏ lỡ",
+                "Bạn đã quên uống liều thuốc " + medication.getName() + " (" + medication.getDosage() + " liều) vào lúc " + scheduleTime,
                 "missed_dose",
                 medication.getId(),
                 scheduleTime
@@ -144,7 +144,8 @@ public class MissedDoseService extends Service {
         markDoseAsDismissed(medication, scheduleTime);
         
         // Broadcast để cập nhật badge
-        sendBroadcast(new Intent("com.example.medicinereminder.NOTIFICATION_ADDED"));
+        Intent broadcastIntent = new Intent("com.example.medicinereminder.NOTIFICATION_ADDED");
+        sendBroadcast(broadcastIntent);
     }
 
     // private void handleSecondMissedDoseReminder(Medication medication, String scheduleTime) {

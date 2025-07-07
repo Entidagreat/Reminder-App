@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Nhắc uống thuốc</string>
+    <string name="app_name">Nhắc nhở uống thuốc</string>
 
     <!-- Navigation -->
     <string name="back">Quay lại</string>
@@ -20,13 +20,13 @@
     <string name="starts">Bắt đầu %1$s</string>
     <string name="adding">Đang thêm...</string>
     <string name="add_medication_button">Thêm thuốc</string>
+    <string name="start_date_label">Ngày bắt đầu uống</string>
 
     <!-- Frequency Options -->
-    <string name="once_daily">Một lần mỗi ngày</string>
-    <string name="twice_daily">Hai lần mỗi ngày</string>
-    <string name="three_times_daily">Ba lần mỗi ngày</string>
-    <string name="four_times_daily">Bốn lần mỗi ngày</string>
-    <string name="as_needed">Khi cần thiết</string>
+    <string name="once_daily">1 lần/ngày</string>
+    <string name="twice_daily">2 lần/ngày</string>
+    <string name="three_times_daily">3 lần/ngày</string>
+    <string name="four_times_daily">4 lần/ngày</string>
 
     <!-- Duration Options -->
     <string name="days_7">7 ngày</string>
@@ -61,7 +61,7 @@
     <string name="no_medications_selected_date">Không có thuốc nào được lên lịch cho ngày này</string>
 
     <!-- History -->
-    <string name="history">Lịch sử</string>
+    <string name="history">Lịch sử uống thuốc</string>
     <string name="all">Tất cả</string>
     <string name="clear_all_data">Xóa tất cả dữ liệu</string>
     <string name="no_history_found">Không tìm thấy lịch sử</string>
@@ -123,7 +123,7 @@
     <string name="todays_schedule">Lịch hôm nay</string>
     <string name="see_all">Xem tất cả</string>
     <string name="refill_tracker_title">Theo dõi bổ sung</string>
-    <string name="app_tagline">Không bao giờ quên uống thuốc</string>
+    <string name="app_tagline">Bạn sẽ không bao giờ quên uống thuốc</string>
     <string name="record_refill">Ghi nhận bổ sung</string>
     <string name="calendar_view">Xem lịch</string>
     <string name="alert_at">Báo lúc</string>
@@ -168,8 +168,8 @@
     <string name="reminder_type_icon">Biểu tượng loại nhắc nhở</string>
     <string name="notifications">Thông báo</string>
     <string name="daily_progress">Tiến độ hàng ngày</string>
-    <string name="quick_actions">Hành động nhanh</string>
-    <string name="doses_progress">%1$d trong %2$d liều</string>
+    <string name="quick_actions">Hành động</string>
+    <string name="doses_progress">%1$d trong số %2$d liều</string>
     <string name="delete_reminder_message">Bạn có chắc muốn xóa nhắc nhở này không?</string>
     <string name="educational_reminder_notification">Nhắc nhở học tập</string>
     <string name="reminder_details">Chi tiết nhắc nhở</string>
@@ -180,4 +180,38 @@
     <string name="social_reminders">Nhắc nhở xã hội</string>
     <string name="health_reminders">Nhắc nhở sức khỏe</string>
     <string name="sleep_reminders">Nhắc nhở giấc ngủ</string>
+
+        <!-- Date and Time -->
+    <string name="monday">Thứ Hai</string>
+    <string name="tuesday">Thứ Ba</string>
+    <string name="wednesday">Thứ Tư</string>
+    <string name="thursday">Thứ Năm</string>
+    <string name="friday">Thứ Sáu</string>
+    <string name="saturday">Thứ Bảy</string>
+    <string name="sunday">Chủ Nhật</string>
+    
+    <string name="january">Tháng Một</string>
+    <string name="february">Tháng Hai</string>
+    <string name="march">Tháng Ba</string>
+    <string name="april">Tháng Tư</string>
+    <string name="may">Tháng Năm</string>
+    <string name="june">Tháng Sáu</string>
+    <string name="july">Tháng Bảy</string>
+    <string name="august">Tháng Tám</string>
+    <string name="september">Tháng Chín</string>
+    <string name="october">Tháng Mười</string>
+    <string name="november">Tháng Mười Một</string>
+    <string name="december">Tháng Mười Hai</string>
+    
+    <string name="date_format">dd/MM/yyyy</string>
+    <string name="datetime_format">dd/MM/yyyy HH:mm</string>
+    <string name="time_format">HH:mm</string>
+
+    <!-- History strings -->
+    <string name="taken">Đã uống</string>
+    <string name="missed">Bỏ lỡ</string>
+    <string name="skipped">Bỏ qua</string>
+    <string name="all_tab">Tất cả</string>
+    <string name="taken_tab">Đã uống</string>
+    <string name="missed_tab">Bỏ lỡ</string>
 </resources>

@@ -29,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Calendar"
+            android:text="Lịch theo dõi"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
@@ -45,14 +45,15 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@color/white"
-        android:elevation="2dp" />
+        android:elevation="2dp"
+        android:theme="@style/CustomCalendarTheme"/>
 
     <!-- Selected Date -->
     <TextView
         android:id="@+id/selectedDateText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Today"
+        android:text="@string/today"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/text_primary"
@@ -72,7 +73,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="No medications scheduled for this date"
+        android:text="Không có thuốc nào được lên lịch cho ngày này"
         android:textSize="16sp"
         android:textColor="@color/text_secondary"
         android:gravity="center"

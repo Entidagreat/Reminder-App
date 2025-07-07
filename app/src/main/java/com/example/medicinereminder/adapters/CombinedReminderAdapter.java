@@ -30,18 +30,43 @@ import android.preference.PreferenceManager;
 
 public class CombinedReminderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     // Helper: lưu trạng thái đã uống cho từng liều theo ngày, thuốc, giờ
+    // Thay đổi hàm isDoseTaken để kiểm tra từ database thay vì SharedPreferences
     private boolean isDoseTaken(View view, int medicationId, String doseTime) {
-        String key = getDoseKey(medicationId, doseTime);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(view.getContext());
-        String today = new java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.getDefault()).format(new java.util.Date());
-        return prefs.getBoolean(key + today, false);
+        try {
+            android.content.Context context = view.getContext();
+            com.example.medicinereminder.utils.DatabaseHelper dbHelper = new com.example.medicinereminder.utils.DatabaseHelper(context);
+            
+            // Tạo thời gian scheduled để so sánh
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault());
+            java.text.SimpleDateFormat fullFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault());
+            
+            java.util.Date today = new java.util.Date();
+            String todayStr = sdf.format(today);
+            java.util.Date scheduledDateTime = fullFormat.parse(todayStr + " " + doseTime);
+            
+            // Kiểm tra trong database
+            java.util.List<com.example.medicinereminder.models.DoseHistory> allToday = dbHelper.getTodaysDoseHistory();
+            for (com.example.medicinereminder.models.DoseHistory dh : allToday) {
+                if (dh.getMedicationId() == medicationId && dh.getScheduledTime() != null) {
+                    java.text.SimpleDateFormat cmpFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault());
+                    String cmp1 = cmpFormat.format(dh.getScheduledTime());
+                    String cmp2 = cmpFormat.format(scheduledDateTime);
+                    if (cmp1.equals(cmp2) && "taken".equals(dh.getStatus())) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-
     private void setDoseTaken(View view, int medicationId, String doseTime) {
-        String key = getDoseKey(medicationId, doseTime);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(view.getContext());
-        String today = new java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.getDefault()).format(new java.util.Date());
-        prefs.edit().putBoolean(key + today, true).apply();
+        // String key = getDoseKey(medicationId, doseTime);
+        // SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(view.getContext());
+        // String today = new java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.getDefault()).format(new java.util.Date());
+        // prefs.edit().putBoolean(key + today, true).apply();
     }
 
     private String getDoseKey(int medicationId, String doseTime) {
