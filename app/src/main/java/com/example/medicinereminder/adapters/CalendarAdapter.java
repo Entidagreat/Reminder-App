@@ -46,7 +46,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
             // Set up status UI based on doseHistory
             if (item.doseHistory != null) {
                 // Dose has been recorded
-                holder.statusText.setText(item.doseHistory.getDisplayStatus());
+                holder.statusText.setText(getVietnameseStatus(item.doseHistory.getStatus()));
                 holder.statusText.setVisibility(View.VISIBLE);
 
                 int statusColor = Color.parseColor(item.doseHistory.getStatusColor());
@@ -87,6 +87,18 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
             timeText = itemView.findViewById(R.id.timeText);
             statusText = itemView.findViewById(R.id.statusText);
             statusIndicator = itemView.findViewById(R.id.statusIndicator);
+        }
+    }
+    private String getVietnameseStatus(String status) {
+        switch (status) {
+            case "taken":
+                return "Đã uống";
+            case "missed":
+                return "Bỏ lỡ";
+            case "skipped":
+                return "Bỏ qua";
+            default:
+                return status;
         }
     }
 }

@@ -33,7 +33,7 @@ public class MedicationDetailActivity extends AppCompatActivity {
     TextView txtName, txtDosage, txtStartDate, txtEndDate, startDateText;
     ImageView backBtn;
     Button updateBtn, deleteBtn;
-    Switch reminderSwitch;
+//    Switch reminderSwitch;
     int medicationId = -1, duration;
     String name, dosage, frequency;
     String selectedFrequency = "once";
@@ -103,7 +103,7 @@ public class MedicationDetailActivity extends AppCompatActivity {
             txtStartDate.setText(startDate != null ? sdf.format(startDate) : "");
             txtEndDate.setText(endDate != null ? sdf.format(endDate) : "");
             startDateText.setText("Chọn lại ngày bắt đầu");
-            reminderSwitch.setChecked(isReminder);
+//            reminderSwitch.setChecked(isReminder);
         }
     }
 
@@ -212,11 +212,11 @@ public class MedicationDetailActivity extends AppCompatActivity {
                 fourTimesText.setTextColor(getResources().getColor(R.color.white));
                 hideTimeSlotLayout();
                 break;
-            case "as_needed":
-                asNeededCard.setCardBackgroundColor(getResources().getColor(R.color.primary_green));
-                asNeededText.setTextColor(getResources().getColor(R.color.white));
-                hideTimeSlotLayout();
-                break;
+//            case "as_needed":
+//                asNeededCard.setCardBackgroundColor(getResources().getColor(R.color.primary_green));
+//                asNeededText.setTextColor(getResources().getColor(R.color.white));
+//                hideTimeSlotLayout();
+//                break;
         }
     }
 
@@ -255,13 +255,13 @@ public class MedicationDetailActivity extends AppCompatActivity {
         twiceCard.setCardBackgroundColor(defaultColor);
         threeTimesCard.setCardBackgroundColor(defaultColor);
         fourTimesCard.setCardBackgroundColor(defaultColor);
-        asNeededCard.setCardBackgroundColor(defaultColor);
+//        asNeededCard.setCardBackgroundColor(defaultColor);
 
         onceText.setTextColor(defaultTextColor);
         twiceText.setTextColor(defaultTextColor);
         threeTimesText.setTextColor(defaultTextColor);
         fourTimesText.setTextColor(defaultTextColor);
-        asNeededText.setTextColor(defaultTextColor);
+//        asNeededText.setTextColor(defaultTextColor);
     }
 
     private void selectDuration(int duration) {
@@ -401,7 +401,7 @@ public class MedicationDetailActivity extends AppCompatActivity {
         updatedMedication.setStartDate(selectedStartDate);
         updatedMedication.calculateEndDate(); // sẽ tự tính endDate từ startDate + duration
         updatedMedication.setEndDate(updatedMedication.getEndDate());
-        updatedMedication.setReminderEnabled(reminderSwitch.isChecked());
+//        updatedMedication.setReminderEnabled(reminderSwitch.isChecked());
         updatedMedication.setReminderTimes(updatedReminderTimes);
 
         int result = databaseHelper.updateMedication(updatedMedication);

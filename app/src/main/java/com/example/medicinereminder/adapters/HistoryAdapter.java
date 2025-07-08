@@ -18,7 +18,7 @@ import java.util.Locale;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
     private List<DoseHistory> historyList;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
     private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
     public HistoryAdapter(List<DoseHistory> historyList) {
@@ -35,40 +35,40 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     @Override
     public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
         DoseHistory history = historyList.get(position);
+        holder.bind(history);
+//        holder.medicationName.setText(history.getMedicationName());
+//        holder.dosageText.setText(history.getDosage());
         
-        holder.medicationName.setText(history.getMedicationName());
-        holder.dosageText.setText(history.getDosage());
-        
-        // Định dạng ngày tháng bằng tiếng Việt
-        SimpleDateFormat vietnameseFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", new Locale("vi", "VN"));
-        String formattedDate = vietnameseFormat.format(history.getScheduledTime());
-        holder.dateText.setText(formattedDate);
+//        // Định dạng ngày tháng bằng tiếng Việt
+//        SimpleDateFormat vietnameseFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", new Locale("vi", "VN"));
+//        String formattedDate = vietnameseFormat.format(history.getScheduledTime());
+//        holder.dateText.setText(formattedDate);
         
         // Hiển thị trạng thái bằng tiếng Việt
         String statusText = "";
-        int statusColor = 0;
+//        int statusColor = 0;
         
         switch (history.getStatus()) {
             case "taken":
                 statusText = "Đã uống";
-                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.status_taken);
+//                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.status_taken);
                 break;
             case "missed":
                 statusText = "Bỏ lỡ";
-                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.status_missed);
+//                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.status_missed);
                 break;
             case "skipped":
                 statusText = "Bỏ qua";
-                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.status_skipped);
+//                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.status_skipped);
                 break;
             default:
                 statusText = "Chưa xác định";
-                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.text_secondary);
+//                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.text_secondary);
                 break;
         }
         
         holder.statusText.setText(statusText);
-        holder.statusText.setTextColor(statusColor);
+//        holder.statusText.setTextColor(statusColor);
     }
 
     @Override

@@ -32,7 +32,7 @@ public class CalendarActivity extends AppCompatActivity {
     private TextView noMedicationsText;
 
     private Date selectedDate;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.getDefault());
+    private SimpleDateFormat vietnameseDateFormat = new SimpleDateFormat("EEEE, dd/MM/yyyy", new Locale("vi", "VN"));
     private SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     @Override
@@ -56,7 +56,7 @@ public class CalendarActivity extends AppCompatActivity {
         setupCalendarWithVietnameseLocale();
     }
 
-        private void setupCalendarWithVietnameseLocale() {
+    private void setupCalendarWithVietnameseLocale() {
         CalendarView calendarView = findViewById(R.id.calendarView);
         
         TextView selectedDateText = findViewById(R.id.selectedDateText);
@@ -99,12 +99,17 @@ public class CalendarActivity extends AppCompatActivity {
             Calendar calendar = Calendar.getInstance();
             calendar.set(year, month, dayOfMonth);
             selectedDate = calendar.getTime();
+
+            // Sử dụng định dạng tiếng Việt cho tất cả các ngày
+            String formattedDate = vietnameseDateFormat.format(selectedDate);
+            selectedDateText.setText(formattedDate);
+
             loadMedicationsForDate(selectedDate);
         });
     }
 
     private void loadMedicationsForDate(Date date) {
-        selectedDateText.setText(dateFormat.format(date));
+        selectedDateText.setText(vietnameseDateFormat.format(date));
 
         // Get medications
         List<Medication> allMedications = dbHelper.getAllMedications();
@@ -133,7 +138,7 @@ public class CalendarActivity extends AppCompatActivity {
                 } else {
                     // As needed medication
                     CalendarItem item = new CalendarItem();
-                    item.type = "medication";
+//                    item.type = "medication";
                     item.medication = medication;
                     item.doseNumber = 0;
                     item.scheduledTime = "As needed";
@@ -278,7 +283,7 @@ public class CalendarActivity extends AppCompatActivity {
 
     // Create a new CalendarItem class that can represent any type of reminder
     public static class CalendarItem {
-        public String type; // "medication" or "educational"
+        public String type;
         public Medication medication;
         public int doseNumber;
         public String scheduledTime;
