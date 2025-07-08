@@ -13,10 +13,7 @@ public class Medication {
     private Date startDate;
     private Date endDate;
     private boolean reminderEnabled;
-    private boolean refillTrackingEnabled;
     private int currentSupply;
-    private int refillThreshold; // percentage
-    private Date lastRefillDate;
     private List<String> reminderTimes;
     private boolean isActive;
 
@@ -24,9 +21,7 @@ public class Medication {
         this.reminderTimes = new ArrayList<>();
         this.isActive = true;
         this.reminderEnabled = true;
-        this.refillTrackingEnabled = false;
         this.currentSupply = 0;
-        this.refillThreshold = 20;
     }
 
     public Medication(String name, String dosage, String frequency, int duration, Date startDate) {
@@ -101,15 +96,6 @@ public class Medication {
                 date1.getDate() == date2.getDate();
     }
 
-    public boolean needsRefill() {
-        if (!refillTrackingEnabled) return false;
-        int dailyDoses = getDailyDoseCount();
-        if (dailyDoses == 0) return false;
-
-        double supplyPercentage = (currentSupply * 100.0) / (dailyDoses * 30); // 30 days supply
-        return supplyPercentage <= refillThreshold;
-    }
-
     // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -146,19 +132,8 @@ public class Medication {
     public boolean isReminderEnabled() { return reminderEnabled; }
     public void setReminderEnabled(boolean reminderEnabled) { this.reminderEnabled = reminderEnabled; }
     public boolean getReminderEnabled() {return reminderEnabled;}
-
-    public boolean isRefillTrackingEnabled() { return refillTrackingEnabled; }
-    public void setRefillTrackingEnabled(boolean refillTrackingEnabled) { this.refillTrackingEnabled = refillTrackingEnabled; }
-
     public int getCurrentSupply() { return currentSupply; }
     public void setCurrentSupply(int currentSupply) { this.currentSupply = currentSupply; }
-
-    public int getRefillThreshold() { return refillThreshold; }
-    public void setRefillThreshold(int refillThreshold) { this.refillThreshold = refillThreshold; }
-
-    public Date getLastRefillDate() { return lastRefillDate; }
-    public void setLastRefillDate(Date lastRefillDate) { this.lastRefillDate = lastRefillDate; }
-
     public List<String> getReminderTimes() { return reminderTimes; }
     public void setReminderTimes(List<String> reminderTimes) { this.reminderTimes = reminderTimes; }
 

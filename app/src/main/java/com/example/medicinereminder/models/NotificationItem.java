@@ -6,7 +6,7 @@ public class NotificationItem {
     private long id;
     private String title;
     private String message;
-    private String type; // "missed_dose", "refill_reminder", "general"
+    private String type;
     private Date createdAt;
     private boolean isRead;
     private int medicationId;

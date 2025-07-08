@@ -41,16 +41,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void navigateToNextScreen() {
         Intent intent;
-
-        if (prefsHelper.isFirstLaunch()) {
-            // First time launching the app
-            prefsHelper.setFirstLaunch(false);
-            intent = new Intent(SplashActivity.this, HomeActivity.class);
-        } else {
-            // Go directly to home
-            intent = new Intent(SplashActivity.this, HomeActivity.class);
-        }
-
+        intent = new Intent(SplashActivity.this, HomeActivity.class);
         startActivity(intent);
         finish();
     }

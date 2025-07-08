@@ -48,10 +48,6 @@
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".RefillActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".MedicationDetailActivity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />

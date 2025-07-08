@@ -38,18 +38,16 @@ public class MedicationDetailActivity extends AppCompatActivity {
     String name, dosage, frequency;
     String selectedFrequency = "once";
     int selectedDuration = 7;
-    long startDateMillis, endDateMillis;
     boolean isReminder;
     Date startDate, endDate;
     List<String> reminderTimes;
-    private CardView onceCard, twiceCard, threeTimesCard, fourTimesCard, asNeededCard;
-    private TextView onceText, twiceText, threeTimesText, fourTimesText, asNeededText;
+    private CardView onceCard, twiceCard, threeTimesCard, fourTimesCard;
+    private TextView onceText, twiceText, threeTimesText, fourTimesText;
     private CardView days7Card, days14Card, days30Card, days90Card, ongoingCard;
     private TextView days7Text, days14Text, days30Text, days90Text, ongoingText;
     private LinearLayout timeSlotLayout;
     private CheckBox timeMorning, timeNoon, timeAfternoon, timeEvening;
     private Date selectedStartDate;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,42 +110,6 @@ public class MedicationDetailActivity extends AppCompatActivity {
                 })
                 .show();
     }
-
-
-//    private void initMedicationDetailUI(){
-//        Medication medication;
-//        Intent intent = getIntent();
-//        if (intent != null) {
-//            medicationId = intent.getIntExtra("medicationId", -1);
-//            if(medicationId != -1){
-//                medication = databaseHelper.getMedication(medicationId);
-//                name = medication.getName();
-//                dosage = medication.getDosage();
-//                frequency = medication.getFrequency();
-//                duration = medication.getDuration();
-//                startDate = medication.getStartDate();
-//                endDate = medication.getEndDate();
-//                reminderTimes = medication.getReminderTimes();
-//                isReminder = medication.getReminderEnabled();
-//            }
-//            Log.d("MedicationDetail", "ID = " + medicationId + ", Name = " + name + ", Dosage = " + dosage
-//                    + ", Frequency = " + frequency + ", Duration = " + duration + ", startDate = "
-//                    + startDate + ", endDate = " + endDate + ", is_reminder = " + isReminder
-//                    +", startDateMillis" + startDateMillis + ", reminder" + reminderTimes);
-//
-//
-//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-//            txtName.setText(name);
-//            txtDosage.setText(dosage);
-//            selectFrequency(frequency);
-//            selectDuration(duration);
-//            updateTimeSlotCheckboxState(frequency, reminderTimes);
-//            txtStartDate.setText(startDate != null ? sdf.format(startDate) : "");
-//            txtEndDate.setText(endDate != null ? sdf.format(endDate) : "");
-//            startDateText.setText("Chọn lại ngày bắt đầu");
-////            reminderSwitch.setChecked(isReminder);
-//        }
-//    }
 
     private void init(){
         txtName = findViewById(R.id.txtName);
@@ -443,7 +405,6 @@ public class MedicationDetailActivity extends AppCompatActivity {
         updatedMedication.setStartDate(selectedStartDate);
         updatedMedication.calculateEndDate(); // sẽ tự tính endDate từ startDate + duration
         updatedMedication.setEndDate(updatedMedication.getEndDate());
-//        updatedMedication.setReminderEnabled(reminderSwitch.isChecked());
         updatedMedication.setReminderTimes(updatedReminderTimes);
 
         int result = databaseHelper.updateMedication(updatedMedication);

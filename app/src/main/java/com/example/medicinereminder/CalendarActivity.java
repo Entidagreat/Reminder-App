@@ -138,7 +138,6 @@ public class CalendarActivity extends AppCompatActivity {
                 } else {
                     // As needed medication
                     CalendarItem item = new CalendarItem();
-//                    item.type = "medication";
                     item.medication = medication;
                     item.doseNumber = 0;
                     item.scheduledTime = "As needed";
@@ -205,7 +204,6 @@ public class CalendarActivity extends AppCompatActivity {
 
     private DoseHistory findDoseHistoryForTime(List<DoseHistory> history, String scheduledTime) {
         for (DoseHistory dose : history) {
-            // Simple matching - in a real app you'd want more sophisticated time matching
             if (dose.getScheduledTime() != null) {
                 SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
                 String doseTime = timeFormat.format(dose.getScheduledTime());
@@ -268,7 +266,7 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         // Update medication supply if needed
-        if ("taken".equals(action) && item.medication.isRefillTrackingEnabled()) {
+        if ("taken".equals(action)) {
             item.medication.setCurrentSupply(item.medication.getCurrentSupply() - 1);
             dbHelper.updateMedication(item.medication);
         }

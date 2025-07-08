@@ -77,9 +77,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 case "missed_dose":
                     notificationIcon.setImageResource(R.drawable.ic_warning);
                     break;
-                case "refill_reminder":
-                    notificationIcon.setImageResource(R.drawable.ic_refill);
-                    break;
                 default:
                     notificationIcon.setImageResource(R.drawable.ic_notifications);
                     break;

@@ -37,17 +37,11 @@ public class AddMedicationActivity extends AppCompatActivity {
     private EditText medicationNameEdit;
     private EditText dosageEdit;
     private TextView startDateText;
-    private Switch reminderSwitch;
-//    private Switch refillSwitch;
-    private EditText currentSupplyEdit;
-//    private SeekBar refillThresholdSeeker;
-//    private TextView refillThresholdText;
-//    private LinearLayout refillLayout;
     private Button addMedicationButton;
 
     // Frequency selection
-    private CardView onceCard, twiceCard, threeTimesCard, fourTimesCard, asNeededCard;
-    private TextView onceText, twiceText, threeTimesText, fourTimesText, asNeededText;
+    private CardView onceCard, twiceCard, threeTimesCard, fourTimesCard;
+    private TextView onceText, twiceText, threeTimesText, fourTimesText;
 
     // Duration selection
     private CardView days7Card, days14Card, days30Card, days90Card, ongoingCard;
@@ -77,7 +71,6 @@ public class AddMedicationActivity extends AppCompatActivity {
 
         initViews();
         setupClickListeners();
-        setupSwitches();
         updateUI();
 
         // Hiển thị ngày bắt đầu mặc định bằng tiếng Việt
@@ -90,7 +83,6 @@ public class AddMedicationActivity extends AppCompatActivity {
         medicationNameEdit = findViewById(R.id.medicationNameEdit);
         dosageEdit = findViewById(R.id.dosageEdit);
         startDateText = findViewById(R.id.startDateText);
-//        refillThresholdText = findViewById(R.id.refillThresholdText);
         addMedicationButton = findViewById(R.id.addMedicationButton);
 
         // Frequency cards
@@ -145,38 +137,12 @@ public class AddMedicationActivity extends AppCompatActivity {
         ongoingCard.setOnClickListener(v -> selectDuration(-1)); // -1 for ongoing
 
         addMedicationButton.setOnClickListener(v -> addMedication());
-
-//        refillThresholdSeeker.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                refillThresholdText.setText(progress + "%");
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {}
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {}
-//        });
-    }
-
-    private void setupSwitches() {
-//        reminderSwitch.setChecked(true);
-//        refillSwitch.setChecked(false);
-
-//        refillSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                refillLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-//            }
-//        });
     }
 
     private void updateUI() {
         startDateText.setText(getString(R.string.starts, dateFormat.format(selectedStartDate)));
         selectFrequency(selectedFrequency);
         selectDuration(selectedDuration);
-//        refillThresholdText.setText(refillThresholdSeeker.getProgress() + "%");
     }
 
     private void showDatePicker() {
@@ -344,19 +310,8 @@ public class AddMedicationActivity extends AppCompatActivity {
 
         // Create medication object
         Medication medication = new Medication(name, dosage, selectedFrequency, selectedDuration, selectedStartDate);
-//        medication.setReminderEnabled(reminderSwitch.isChecked());
-//        medication.setRefillTrackingEnabled(refillSwitch.isChecked());
-
-//        if (refillSwitch.isChecked()) {
-//            String currentSupplyStr = currentSupplyEdit.getText().toString().trim();
-//            if (!TextUtils.isEmpty(currentSupplyStr)) {
-//                medication.setCurrentSupply(Integer.parseInt(currentSupplyStr));
-//            }
-//            medication.setRefillThreshold(refillThresholdSeeker.getProgress());
-//        }
 
         // Set reminder times theo lựa chọn
-//        if (reminderSwitch.isChecked()) {
             List<String> times = new ArrayList<>();
             if (selectedFrequency.equals("once")) {
                 if (timeMorning.isChecked()) times.add("08:00");
@@ -391,7 +346,6 @@ public class AddMedicationActivity extends AppCompatActivity {
                 times.add("20:00");
             }
             medication.setReminderTimes(times);
-//        }
 
         // Save to database
         addMedicationButton.setText(getString(R.string.adding));

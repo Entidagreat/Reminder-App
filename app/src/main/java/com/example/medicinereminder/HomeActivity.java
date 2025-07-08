@@ -285,12 +285,6 @@ public class HomeActivity extends AppCompatActivity {
 
         dbHelper.addDoseHistory(doseHistory);
 
-        // Update medication supply if refill tracking is enabled
-        if (medication.isRefillTrackingEnabled()) {
-            medication.setCurrentSupply(medication.getCurrentSupply() - 1);
-            dbHelper.updateMedication(medication);
-        }
-
         // Refresh the display
         loadData();
     }

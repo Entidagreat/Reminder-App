@@ -45,7 +45,6 @@
     <string name="add_medication">Thêm thuốc</string>
     <string name="view_calendar">Lịch</string>
     <string name="view_history">Lịch sử</string>
-    <string name="refill_alerts">Cảnh báo bổ sung thuốc</string>
 
     <!-- Medication Actions -->
     <string name="take">Uống</string>
@@ -66,18 +65,8 @@
     <string name="clear_all_data">Xóa tất cả dữ liệu</string>
     <string name="no_history_found">Không tìm thấy lịch sử</string>
 
-    <!-- Refill -->
-    <string name="refill_alerts_title">Cảnh báo bổ sung thuốc</string>
-    <string name="no_refill_alerts">Hiện không có cảnh báo bổ sung thuốc</string>
-    <string name="refill">Bổ sung</string>
-    <string name="supply_low">Sắp hết thuốc</string>
-    <string name="pills_left">viên còn lại</string>
-
     <!-- Settings -->
-    <string name="refill_tracking">Theo dõi bổ sung</string>
-    <string name="refill_tracking_description">Theo dõi số lượng thuốc và nhận cảnh báo khi sắp hết</string>
     <string name="current_supply">Số lượng hiện tại</string>
-    <string name="refill_threshold">Ngưỡng bổ sung</string>
     <string name="pills">viên</string>
 
     <!-- Notifications -->
@@ -111,23 +100,12 @@
     <string name="tomorrow">Ngày mai</string>
     <string name="yesterday">Hôm qua</string>
 
-    <!-- Refill Dialog -->
-    <string name="refill_medication">Bổ sung thuốc</string>
-    <string name="current_supply_label">Số lượng hiện tại:</string>
-    <string name="new_supply">Số lượng mới</string>
-    <string name="enter_new_supply">Nhập số lượng mới</string>
-    <string name="update_supply">Cập nhật số lượng</string>
-
     <string name="history_log">Nhật ký lịch sử</string>
-    <string name="refill_tracker">Theo dõi bổ sung</string>
     <string name="todays_schedule">Lịch hôm nay</string>
     <string name="see_all">Xem tất cả</string>
-    <string name="refill_tracker_title">Theo dõi bổ sung</string>
     <string name="app_tagline">Bạn sẽ không bao giờ quên uống thuốc</string>
-    <string name="record_refill">Ghi nhận bổ sung</string>
     <string name="calendar_view">Xem lịch</string>
     <string name="alert_at">Báo lúc</string>
-    <string name="refill_description">Theo dõi số lượng thuốc và nhận thông báo khi sắp hết</string>
 
     <!-- Educational Reminders -->
     <string name="educational_reminders">Nhắc nhở học tập</string>

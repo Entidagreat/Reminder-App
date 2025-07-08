@@ -35,10 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_START_DATE = "start_date";
     private static final String KEY_END_DATE = "end_date";
     private static final String KEY_REMINDER_ENABLED = "reminder_enabled";
-    private static final String KEY_REFILL_TRACKING = "refill_tracking";
     private static final String KEY_CURRENT_SUPPLY = "current_supply";
-    private static final String KEY_REFILL_THRESHOLD = "refill_threshold";
-    private static final String KEY_LAST_REFILL_DATE = "last_refill_date";
     private static final String KEY_REMINDER_TIMES = "reminder_times";
     private static final String KEY_IS_ACTIVE = "is_active";
 
@@ -67,10 +64,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + KEY_START_DATE + " TEXT,"
                 + KEY_END_DATE + " TEXT,"
                 + KEY_REMINDER_ENABLED + " INTEGER DEFAULT 1,"
-                + KEY_REFILL_TRACKING + " INTEGER DEFAULT 0,"
                 + KEY_CURRENT_SUPPLY + " INTEGER DEFAULT 0,"
-                + KEY_REFILL_THRESHOLD + " INTEGER DEFAULT 20,"
-                + KEY_LAST_REFILL_DATE + " TEXT,"
                 + KEY_REMINDER_TIMES + " TEXT,"
                 + KEY_IS_ACTIVE + " INTEGER DEFAULT 1" + ")";
 
@@ -126,12 +120,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(KEY_END_DATE, dateFormat.format(medication.getEndDate()));
         }
         values.put(KEY_REMINDER_ENABLED, medication.isReminderEnabled() ? 1 : 0);
-        values.put(KEY_REFILL_TRACKING, medication.isRefillTrackingEnabled() ? 1 : 0);
         values.put(KEY_CURRENT_SUPPLY, medication.getCurrentSupply());
-        values.put(KEY_REFILL_THRESHOLD, medication.getRefillThreshold());
-        if (medication.getLastRefillDate() != null) {
-            values.put(KEY_LAST_REFILL_DATE, dateFormat.format(medication.getLastRefillDate()));
-        }
         values.put(KEY_REMINDER_TIMES, gson.toJson(medication.getReminderTimes()));
         values.put(KEY_IS_ACTIVE, medication.isActive() ? 1 : 0);
 
@@ -195,10 +184,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_FREQUENCY, medication.getFrequency());
         values.put(KEY_DURATION, medication.getDuration());
         values.put(KEY_CURRENT_SUPPLY, medication.getCurrentSupply());
-        values.put(KEY_REFILL_THRESHOLD, medication.getRefillThreshold());
-        if (medication.getLastRefillDate() != null) {
-            values.put(KEY_LAST_REFILL_DATE, dateFormat.format(medication.getLastRefillDate()));
-        }
         values.put(KEY_REMINDER_TIMES, gson.toJson(medication.getReminderTimes()));
 
         int result = db.update(TABLE_MEDICATIONS, values, KEY_ID + "=?",
@@ -292,9 +277,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         medication.setFrequency(cursor.getString(cursor.getColumnIndexOrThrow(KEY_FREQUENCY)));
         medication.setDuration(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_DURATION)));
         medication.setReminderEnabled(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_REMINDER_ENABLED)) == 1);
-        medication.setRefillTrackingEnabled(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_REFILL_TRACKING)) == 1);
         medication.setCurrentSupply(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_CURRENT_SUPPLY)));
-        medication.setRefillThreshold(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_REFILL_THRESHOLD)));
         medication.setActive(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_IS_ACTIVE)) == 1);
 
         try {
@@ -307,11 +290,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             String endDateStr = cursor.getString(cursor.getColumnIndexOrThrow(KEY_END_DATE));
             if (endDateStr != null && !endDateStr.isEmpty()) {
                 medication.setEndDate(dateFormat.parse(endDateStr));
-            }
-
-            String lastRefillDateStr = cursor.getString(cursor.getColumnIndexOrThrow(KEY_LAST_REFILL_DATE));
-            if (lastRefillDateStr != null && !lastRefillDateStr.isEmpty()) {
-                medication.setLastRefillDate(dateFormat.parse(lastRefillDateStr));
             }
 
             String reminderTimesJson = cursor.getString(cursor.getColumnIndexOrThrow(KEY_REMINDER_TIMES));
@@ -399,29 +377,61 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
+//    public List<NotificationItem> getAllNotifications() {
+//        List<NotificationItem> notifications = new ArrayList<>();
+//        SQLiteDatabase db = this.getReadableDatabase();
+//
+//        Cursor cursor = db.rawQuery("SELECT * FROM notifications ORDER BY created_at DESC", null);
+//
+//        if (cursor.moveToFirst()) {
+//            do {
+//                NotificationItem notification = new NotificationItem();
+//                notification.setId(cursor.getLong(cursor.getColumnIndex("id")));
+//                notification.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+//                notification.setMessage(cursor.getString(cursor.getColumnIndex("message")));
+//                notification.setType(cursor.getString(cursor.getColumnIndex("type")));
+//                notification.setMedicationId(cursor.getInt(cursor.getColumnIndex("medication_id")));
+//                notification.setScheduledTime(cursor.getString(cursor.getColumnIndex("scheduled_time")));
+//                notification.setCreatedAt(new Date(cursor.getLong(cursor.getColumnIndex("created_at"))));
+//                notification.setRead(cursor.getInt(cursor.getColumnIndex("is_read")) == 1);
+//                notification.setRetryCount(cursor.getInt(cursor.getColumnIndex("retry_count")));
+//
+//                notifications.add(notification);
+//            } while (cursor.moveToNext());
+//        }
+//
+//        cursor.close();
+//        db.close();
+//        return notifications;
+//    }
+
     public List<NotificationItem> getAllNotifications() {
         List<NotificationItem> notifications = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        
-        Cursor cursor = db.rawQuery("SELECT * FROM notifications ORDER BY created_at DESC", null);
-        
+
+        // Define column names to avoid magic strings
+        String[] columns = {"id", "title", "message", "type", "medication_id",
+                "scheduled_time", "created_at", "is_read", "retry_count"};
+
+        Cursor cursor = db.query("notifications", columns, null, null, null, null, "created_at DESC");
+
         if (cursor.moveToFirst()) {
             do {
                 NotificationItem notification = new NotificationItem();
-                notification.setId(cursor.getLong(cursor.getColumnIndex("id")));
-                notification.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-                notification.setMessage(cursor.getString(cursor.getColumnIndex("message")));
-                notification.setType(cursor.getString(cursor.getColumnIndex("type")));
-                notification.setMedicationId(cursor.getInt(cursor.getColumnIndex("medication_id")));
-                notification.setScheduledTime(cursor.getString(cursor.getColumnIndex("scheduled_time")));
-                notification.setCreatedAt(new Date(cursor.getLong(cursor.getColumnIndex("created_at"))));
-                notification.setRead(cursor.getInt(cursor.getColumnIndex("is_read")) == 1);
-                notification.setRetryCount(cursor.getInt(cursor.getColumnIndex("retry_count")));
-                
+                notification.setId(cursor.getLong(0)); // id
+                notification.setTitle(cursor.getString(1)); // title
+                notification.setMessage(cursor.getString(2)); // message
+                notification.setType(cursor.getString(3)); // type
+                notification.setMedicationId(cursor.getInt(4)); // medication_id
+                notification.setScheduledTime(cursor.getString(5)); // scheduled_time
+                notification.setCreatedAt(new Date(cursor.getLong(6))); // created_at
+                notification.setRead(cursor.getInt(7) == 1); // is_read
+                notification.setRetryCount(cursor.getInt(8)); // retry_count
+
                 notifications.add(notification);
             } while (cursor.moveToNext());
         }
-        
+
         cursor.close();
         db.close();
         return notifications;
