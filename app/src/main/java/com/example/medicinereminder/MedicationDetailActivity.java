@@ -62,50 +62,92 @@ public class MedicationDetailActivity extends AppCompatActivity {
         initMedicationDetailUI();
     }
 
-    private void initMedicationDetailUI(){
-        Medication medication;
+    private void initMedicationDetailUI() {
         Intent intent = getIntent();
-        if (intent != null) {
-            medicationId = intent.getIntExtra("medicationId", -1);
-            if(medicationId != -1){
-                medication = databaseHelper.getMedication(medicationId);
-                name = medication.getName();
-                dosage = medication.getDosage();
-                frequency = medication.getFrequency();
-                duration = medication.getDuration();
-                startDate = medication.getStartDate();
-                endDate = medication.getEndDate();
-                reminderTimes = medication.getReminderTimes();
-                isReminder = medication.getReminderEnabled();
-            }
-//            name = intent.getStringExtra("name");
-//            dosage = intent.getStringExtra("dosage");
-//            frequency = intent.getStringExtra("frequency");
-//            duration = intent.getIntExtra("duration", 0);
-//            startDateMillis = intent.getLongExtra("start_date", -1);
-//            startDate = (startDateMillis != -1) ? new Date(startDateMillis) : null;
-//            endDateMillis = intent.getLongExtra("end_date", -1);
-//            endDate = (endDateMillis != -1) ? new Date(endDateMillis) : null;
-//            reminderTimes = intent.getStringArrayListExtra("reminderTimes");
-//            isReminder = intent.getBooleanExtra("is_reminder", true);
-            Log.d("MedicationDetail", "ID = " + medicationId + ", Name = " + name + ", Dosage = " + dosage
-                    + ", Frequency = " + frequency + ", Duration = " + duration + ", startDate = "
-                    + startDate + ", endDate = " + endDate + ", is_reminder = " + isReminder
-                    +", startDateMillis" + startDateMillis + ", reminder" + reminderTimes);
-
-
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            txtName.setText(name);
-            txtDosage.setText(dosage);
-            selectFrequency(frequency);
-            selectDuration(duration);
-            updateTimeSlotCheckboxState(frequency, reminderTimes);
-            txtStartDate.setText(startDate != null ? sdf.format(startDate) : "");
-            txtEndDate.setText(endDate != null ? sdf.format(endDate) : "");
-            startDateText.setText("Chọn lại ngày bắt đầu");
-//            reminderSwitch.setChecked(isReminder);
+        if (intent == null) {
+            showErrorAndExit("Lỗi hệ thống: Không nhận được dữ liệu từ màn hình trước");
+            return;
         }
+
+        medicationId = intent.getIntExtra("medicationId", -1);
+        if (medicationId == -1) {
+            showErrorAndExit("Không tìm thấy thông tin thuốc");
+            return;
+        }
+
+        Medication medication = databaseHelper.getMedication(medicationId);
+        if (medication == null) {
+            showErrorAndExit("Thuốc không tồn tại hoặc đã bị xoá");
+            return;
+        }
+
+        // Tiếp tục nếu hợp lệ
+        name = medication.getName();
+        dosage = medication.getDosage();
+        frequency = medication.getFrequency();
+        duration = medication.getDuration();
+        startDate = medication.getStartDate();
+        endDate = medication.getEndDate();
+        reminderTimes = medication.getReminderTimes();
+        isReminder = medication.getReminderEnabled();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        txtName.setText(name);
+        txtDosage.setText(dosage);
+        selectFrequency(frequency);
+        selectDuration(duration);
+        updateTimeSlotCheckboxState(frequency, reminderTimes);
+        txtStartDate.setText(startDate != null ? sdf.format(startDate) : "");
+        txtEndDate.setText(endDate != null ? sdf.format(endDate) : "");
+        startDateText.setText("Chọn lại ngày bắt đầu");
     }
+
+    private void showErrorAndExit(String message) {
+        new AlertDialog.Builder(this)
+                .setTitle("Lỗi")
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Quay lại", (dialog, which) -> {
+                    finish(); // kết thúc activity
+                })
+                .show();
+    }
+
+
+//    private void initMedicationDetailUI(){
+//        Medication medication;
+//        Intent intent = getIntent();
+//        if (intent != null) {
+//            medicationId = intent.getIntExtra("medicationId", -1);
+//            if(medicationId != -1){
+//                medication = databaseHelper.getMedication(medicationId);
+//                name = medication.getName();
+//                dosage = medication.getDosage();
+//                frequency = medication.getFrequency();
+//                duration = medication.getDuration();
+//                startDate = medication.getStartDate();
+//                endDate = medication.getEndDate();
+//                reminderTimes = medication.getReminderTimes();
+//                isReminder = medication.getReminderEnabled();
+//            }
+//            Log.d("MedicationDetail", "ID = " + medicationId + ", Name = " + name + ", Dosage = " + dosage
+//                    + ", Frequency = " + frequency + ", Duration = " + duration + ", startDate = "
+//                    + startDate + ", endDate = " + endDate + ", is_reminder = " + isReminder
+//                    +", startDateMillis" + startDateMillis + ", reminder" + reminderTimes);
+//
+//
+//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+//            txtName.setText(name);
+//            txtDosage.setText(dosage);
+//            selectFrequency(frequency);
+//            selectDuration(duration);
+//            updateTimeSlotCheckboxState(frequency, reminderTimes);
+//            txtStartDate.setText(startDate != null ? sdf.format(startDate) : "");
+//            txtEndDate.setText(endDate != null ? sdf.format(endDate) : "");
+//            startDateText.setText("Chọn lại ngày bắt đầu");
+////            reminderSwitch.setChecked(isReminder);
+//        }
+//    }
 
     private void init(){
         txtName = findViewById(R.id.txtName);
@@ -366,7 +408,7 @@ public class MedicationDetailActivity extends AppCompatActivity {
                         endDate = new Date(endTime);
                     }
                     txtEndDate.setText(endDate != null ? sdf.format(endDate) : "");
-                    startDateText.setText(getString(R.string.starts, dateFormat.format(selectedStartDate)));
+                    startDateText.setText(getString(R.string.starts, sdf.format(selectedStartDate)));
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),

@@ -1,5 +1,7 @@
 package com.example.medicinereminder.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.medicinereminder.CalendarActivity;
+import com.example.medicinereminder.MedicationDetailActivity;
 import com.example.medicinereminder.R;
 import java.util.List;
 
@@ -87,6 +90,22 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
             timeText = itemView.findViewById(R.id.timeText);
             statusText = itemView.findViewById(R.id.statusText);
             statusIndicator = itemView.findViewById(R.id.statusIndicator);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        CalendarActivity.CalendarItem clickedItem = items.get(position);
+                        if ("medication".equals(clickedItem.type)) {
+                            Context context = v.getContext();
+                            Intent intent = new Intent(context, MedicationDetailActivity.class);
+                            intent.putExtra("medicationId", clickedItem.medication.getId());
+                            context.startActivity(intent);
+                        }
+                    }
+                }
+            });
         }
     }
     private String getVietnameseStatus(String status) {
