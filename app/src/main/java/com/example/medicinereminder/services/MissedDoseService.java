@@ -127,7 +127,7 @@ public class MissedDoseService extends Service {
         // Create notification
         NotificationItem notification = new NotificationItem(
                 "Nhắc nhở liều thuốc đã bỏ lỡ",
-                "Bạn đã quên uống liều thuốc " + medication.getName() + " (" + medication.getDosage() + " liều) vào lúc " + scheduleTime,
+                "Bạn đã quên uống liều thuốc " + medication.getName() + " (" + medication.getDosage() + ") vào lúc " + scheduleTime,
                 "missed_dose",
                 medication.getId(),
                 scheduleTime
