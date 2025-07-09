@@ -55,7 +55,11 @@ public class CalendarActivity extends AppCompatActivity {
         // Thiết lập định dạng ngày tháng tiếng Việt
         setupCalendarWithVietnameseLocale();
     }
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadMedicationsForDate(selectedDate);
+    }
     private void setupCalendarWithVietnameseLocale() {
         CalendarView calendarView = findViewById(R.id.calendarView);
         
