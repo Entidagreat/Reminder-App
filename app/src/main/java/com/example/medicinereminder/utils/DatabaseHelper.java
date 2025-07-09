@@ -183,8 +183,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_DOSAGE, medication.getDosage());
         values.put(KEY_FREQUENCY, medication.getFrequency());
         values.put(KEY_DURATION, medication.getDuration());
-        values.put(KEY_CURRENT_SUPPLY, medication.getCurrentSupply());
         values.put(KEY_REMINDER_TIMES, gson.toJson(medication.getReminderTimes()));
+        values.put(KEY_START_DATE, dateFormat.format(medication.getStartDate()));
+        values.put(KEY_END_DATE, dateFormat.format(medication.getEndDate()));
 
         int result = db.update(TABLE_MEDICATIONS, values, KEY_ID + "=?",
                 new String[]{String.valueOf(medication.getId())});

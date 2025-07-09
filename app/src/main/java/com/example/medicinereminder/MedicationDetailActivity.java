@@ -89,6 +89,11 @@ public class MedicationDetailActivity extends AppCompatActivity {
         reminderTimes = medication.getReminderTimes();
         isReminder = medication.getReminderEnabled();
 
+        Log.d("MedicationDetail", "ID = " + medicationId + ", Name = " + name
+                + ", Dosage = " + dosage + ", Frequency = " + frequency + ", Duration = " + duration
+                + ", startDate = " + startDate + ", endDate = " + endDate
+                + ", is_reminder = " + isReminder + ", reminder" + reminderTimes);
+
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         txtName.setText(name);
         txtDosage.setText(dosage);
@@ -396,18 +401,16 @@ public class MedicationDetailActivity extends AppCompatActivity {
         if (timeAfternoon.isChecked()) updatedReminderTimes.add("17:00");
         if (timeEvening.isChecked()) updatedReminderTimes.add("20:00");
 
-        Medication updatedMedication = new Medication();
+        Medication updatedMedication = new Medication(updatedName, updatedDosage, selectedFrequency, selectedDuration, selectedStartDate);
         updatedMedication.setId(medicationId);
-        updatedMedication.setName(updatedName);
-        updatedMedication.setDosage(updatedDosage);
-        updatedMedication.setFrequency(selectedFrequency);
-        updatedMedication.setDuration(selectedDuration);
-        updatedMedication.setStartDate(selectedStartDate);
-        updatedMedication.calculateEndDate(); // sẽ tự tính endDate từ startDate + duration
-        updatedMedication.setEndDate(updatedMedication.getEndDate());
+        updatedMedication.calculateEndDate();
         updatedMedication.setReminderTimes(updatedReminderTimes);
 
+        Log.d("Update medication", "end date: " + updatedMedication.getEndDate());
+
         int result = databaseHelper.updateMedication(updatedMedication);
+
+        Log.d("Result update", "" + result);
         if (result > 0) {
             Toast.makeText(this, "Cập nhật thuốc thành công", Toast.LENGTH_SHORT).show();
             finish(); // hoặc chuyển về trang trước đó
